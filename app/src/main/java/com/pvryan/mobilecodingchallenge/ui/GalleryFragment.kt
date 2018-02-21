@@ -50,8 +50,10 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val spanCount =
-                if (activity?.getOrientation() == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+        // Set span count according to the screen orientation
+        val spanCount = if ((activity as GalleryActivity).getOrientation()
+                == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
+
         // Initialize recycler view
         rvImages.setHasFixedSize(false)
         rvImages.layoutManager = GridLayoutManager(view.context, spanCount)
