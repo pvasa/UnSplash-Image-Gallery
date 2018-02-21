@@ -3,7 +3,7 @@
 This is a coding challenge for prospective mobile developer applicants applying through http://work.traderev.com/
 
 ## Compile:
-API Version 27. Install if asked.
+App uses API Version 27. Update if needed.
 
 Install kotlin plugin if not present.
 > The Kotlin plugin is bundled with Android Studio starting from version 3.0. If you use an earlier version, you'll need to install the Kotlin plugin. Go to File | Settings | Plugins | Install JetBrains plugin… and then search for and install Kotlin. If you are looking at the "Welcome to Android Studio" screen, choose Configure | Plugins | Install JetBrains plugin… You'll need to restart the IDE after this completes.
