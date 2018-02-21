@@ -1,5 +1,3 @@
-package com.pvryan.mobilecodingchallenge
-
 /*
  * Copyright 2018 Priyank Vasa
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +12,11 @@ package com.pvryan.mobilecodingchallenge
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import android.support.v7.app.AppCompatActivity
+package com.pvryan.mobilecodingchallenge.ui
+
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import com.pvryan.mobilecodingchallenge.R
 import kotlinx.android.synthetic.main.activity_gallery.*
 
 class GalleryActivity : AppCompatActivity() {
@@ -24,5 +25,8 @@ class GalleryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
         setSupportActionBar(toolbar)
+
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.container, GalleryFragment.newInstance()).commit()
     }
 }
