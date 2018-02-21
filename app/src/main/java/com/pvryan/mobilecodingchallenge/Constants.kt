@@ -12,27 +12,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@Suppress("unused")
-internal object Versions {
+package com.pvryan.mobilecodingchallenge
 
-    // App and SDK versions
-    const val vCode = 100
-    const val vName = "1.0.0"
-    const val compileSdk = 27
-    const val minSdk = 16
-    const val targetSdk = 27
+object Constants {
 
-    // Dependency versions
-    const val buildGradle = "3.0.1"
-    const val kotlin = "1.2.21"
-    const val support = "27.0.2"
-    const val retrofit = "2.3.0"
-    const val glide = "4.6.1"
+    // unsplash
+    const val baseURLUnsplash = "https://api.unsplash.com/"
+    const val appIdUnsplash = "433e7e72d2dbd376ff3f8cc4198b08f43d0923ef6134f37d1b170f2f0ff73d3e"
 
-    // Test dependency versions
-    const val junit = "4.12"
+    // request and response codes
+    const val rcExpandedImageActivity = 1
 
-    // Android test dependency versions
-    const val runner = "1.0.1"
-    const val espresso = "3.0.1"
+    // keys
+    const val keyImages = "images"
+    const val keyExpandedImage = "expandedImage"
+    const val keyPosition = "position"
+
+    // errors
+    const val errorInvalidImage = "Invalid image. Try again."
 }

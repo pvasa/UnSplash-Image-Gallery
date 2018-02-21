@@ -14,7 +14,9 @@
  */
 package com.pvryan.mobilecodingchallenge.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import com.pvryan.mobilecodingchallenge.R
 import kotlinx.android.synthetic.main.activity_gallery.*
@@ -28,5 +30,12 @@ class GalleryActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction()
                 .replace(R.id.container, GalleryFragment.newInstance()).commit()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        for (frag: Fragment in supportFragmentManager.fragments) {
+            frag.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }

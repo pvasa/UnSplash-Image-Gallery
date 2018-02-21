@@ -17,13 +17,23 @@ package com.pvryan.mobilecodingchallenge.data
 import android.os.Parcel
 import android.os.Parcelable
 
-class Image(private val url: String, private val title: String) : Parcelable {
+@Suppress("MemberVisibilityCanBePrivate")
+data class Image(val id: String,
+                 val description: String?,
+                 val urls: Urls,
+                 val user: User) : Parcelable {
 
-    constructor(parcel: Parcel) : this(parcel.readString(), parcel.readString())
+    constructor(parcel: Parcel) :
+            this(parcel.readString(),
+                    parcel.readString(),
+                    parcel.readParcelable<Urls>(Urls::class.java.classLoader),
+                    parcel.readParcelable<User>(User::class.java.classLoader))
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(url)
-        parcel.writeString(title)
+        parcel.writeString(id)
+        parcel.writeString(description)
+        parcel.writeParcelable(urls, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
+        parcel.writeParcelable(user, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
     }
 
     override fun describeContents(): Int {
@@ -39,5 +49,4 @@ class Image(private val url: String, private val title: String) : Parcelable {
             return arrayOfNulls(size)
         }
     }
-
 }

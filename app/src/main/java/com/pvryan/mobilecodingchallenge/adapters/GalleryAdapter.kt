@@ -14,61 +14,58 @@
  */
 package com.pvryan.mobilecodingchallenge.adapters
 
-import android.animation.Animator
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
-import com.pvryan.mobilecodingchallenge.extensions.zoomImageFromThumb
+import com.pvryan.mobilecodingchallenge.data.Image
+import com.pvryan.mobilecodingchallenge.ui.ExpandedImageActivity
 import com.pvryan.mobilecodingchallenge.ui.GalleryActivity
 import kotlinx.android.synthetic.main.item_image.view.*
 
-class GalleryAdapter(private val context: Context, private val images: ArrayList<String>) :
+@Suppress("MemberVisibilityCanBePrivate")
+class GalleryAdapter(private val context: Context, val images: List<Image>) :
         RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GalleryViewHolder {
+
         val imageView = LayoutInflater.from(context)
                 .inflate(R.layout.item_image, parent, false)
-        return GalleryViewHolder(imageView, context)
+        return GalleryViewHolder(imageView)
     }
     
     override fun getItemCount(): Int = images.size
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
-        val imageURL = images[position]
+
+        val image = images[position]
+
         Glide.with(context)
                 .asBitmap()
-                .load(Uri.parse(imageURL))
+                .load(Uri.parse(image.urls.regular))
                 .into(holder.imageView)
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.imageView.context, ExpandedImageActivity::class.java)
+            val args = Bundle()
+            args.putParcelableArrayList(Constants.keyImages, ArrayList(images))
+            args.putInt(Constants.keyPosition, position)
+            intent.putExtras(args)
+            (context as GalleryActivity).startActivityForResult(
+                    intent, Constants.rcExpandedImageActivity)
+        }
     }
 
-    class GalleryViewHolder(itemView: View, context: Context) :
-            RecyclerView.ViewHolder(itemView), View.OnClickListener {
-
+    class GalleryViewHolder(itemView: View) :
+            RecyclerView.ViewHolder(itemView) {
         val imageView = itemView.ivImage as ImageView
-
-        private val container: FrameLayout =
-                (context as GalleryActivity).findViewById(R.id.container)
-        private val ivExpandedImage: ImageView =
-                (context as GalleryActivity).findViewById(R.id.ivExpandedImage)
-
-        init {
-            itemView.setOnClickListener(this)
-        }
-
-        // Hold a reference to the current animator,
-        // so that it can be canceled mid-way.
-        private var mCurrentAnimator: Animator? = null
-
-        override fun onClick(v: View?) {
-            mCurrentAnimator = imageView.zoomImageFromThumb(
-                    ivExpandedImage, container, mCurrentAnimator)
-        }
     }
 }

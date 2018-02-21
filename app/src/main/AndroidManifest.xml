@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor">
+
         <activity android:name=".ui.GalleryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.ExpandedImageActivity"
+            android:theme="@style/AppTheme.FullScreen"
+            android:parentActivityName=".ui.GalleryActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.GalleryActivity" />
+        </activity>
+
     </application>
 
 </manifest>
