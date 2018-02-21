@@ -19,7 +19,7 @@ internal object Versions {
     const val vCode = 100
     const val vName = "1.0.0"
     const val compileSdk = 27
-    const val minSdk = 14
+    const val minSdk = 16
     const val targetSdk = 27
 
     // Dependency versions

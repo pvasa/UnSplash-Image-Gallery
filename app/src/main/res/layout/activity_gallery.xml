@@ -19,7 +19,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.pvryan.mobilecodingchallenge.GalleryActivity">
+    android:background="@android:color/black"
+    tools:context="com.pvryan.mobilecodingchallenge.ui.GalleryActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -41,7 +42,9 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/appbar_padding_top"
+        android:layout_marginTop="?attr/actionBarSize">
 
     </FrameLayout>
 
