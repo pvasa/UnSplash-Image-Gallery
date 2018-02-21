@@ -32,38 +32,49 @@ import com.pvryan.mobilecodingchallenge.ui.GalleryActivity
 import kotlinx.android.synthetic.main.item_image.view.*
 
 @Suppress("MemberVisibilityCanBePrivate")
-class GalleryAdapter(private val context: Context, val images: List<Image>) :
+// Adapter for recycler view showing images in grid layout
+class GalleryAdapter(private val context: Context, val images: ArrayList<Image>) :
         RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
+
+    // View holder of each image
+    lateinit var viewHolder: GalleryViewHolder
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GalleryViewHolder {
 
         val imageView = LayoutInflater.from(context)
                 .inflate(R.layout.item_image, parent, false)
-        return GalleryViewHolder(imageView)
+        viewHolder = GalleryViewHolder(imageView)
+        return viewHolder
     }
-    
+
+    // Return total number of images shown
     override fun getItemCount(): Int = images.size
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
 
+        // Image at current position
         val image = images[position]
 
+        // Load the image with regular quality
         Glide.with(context)
                 .asBitmap()
                 .load(Uri.parse(image.urls.regular))
                 .into(holder.imageView)
 
+        // Expand the image on click into a new activity
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.imageView.context, ExpandedImageActivity::class.java)
             val args = Bundle()
-            args.putParcelableArrayList(Constants.keyImages, ArrayList(images))
-            args.putInt(Constants.keyPosition, position)
+            // Send all images and current position for view pager to start with
+            args.putParcelableArrayList(Constants.Keys.images, images)
+            args.putInt(Constants.Keys.position, position)
             intent.putExtras(args)
             (context as GalleryActivity).startActivityForResult(
-                    intent, Constants.rcExpandedImageActivity)
+                    intent, Constants.Codes.expandedImageActivity)
         }
     }
 
+    // View holder of each image
     class GalleryViewHolder(itemView: View) :
             RecyclerView.ViewHolder(itemView) {
         val imageView = itemView.ivImage as ImageView

@@ -24,21 +24,25 @@ import com.pvryan.mobilecodingchallenge.ui.ExpandedImageFragment
 import java.util.ArrayList
 
 @Suppress("MemberVisibilityCanBePrivate")
+// Adapter for view pager in expanded image layout
 class ExpandedImagePagerAdapter(fm: FragmentManager, extras: Bundle) :
         FragmentStatePagerAdapter(fm) {
 
-    val images: ArrayList<Image> = extras.getParcelableArrayList(Constants.keyImages)
+    // Fetch images to load
+    val images: ArrayList<Image> = extras.getParcelableArrayList(Constants.Keys.images)
 
+    // Return a new fragment for image at current position
     override fun getItem(position: Int): Fragment {
         val fragment = ExpandedImageFragment.newInstance()
         val args = Bundle()
-        args.putParcelable(Constants.keyExpandedImage, images[position])
+        args.putParcelable(Constants.Keys.expandedImage, images[position])
         fragment.arguments = args
         return fragment
     }
 
+    // Return total number of images
     override fun getCount(): Int = images.size
 
+    // Return page title (publisher's name) for each image/page
     override fun getPageTitle(position: Int): CharSequence? = images[position].user.name
-
 }

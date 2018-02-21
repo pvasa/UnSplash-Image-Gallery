@@ -14,15 +14,18 @@
  */
 package com.pvryan.mobilecodingchallenge.data.source
 
+import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.data.Image
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+// Retrofit api to fetch latest images from Unsplash
 interface Unsplash {
     @GET("photos")
-    fun getLatestImages(@Query("client_id") clientId: String,
-                        @Query("page") page: Int = 1,
-                        @Query("per_page") perPage: Int = 10,
-                        @Query("order_by") orderBy: String = "latest"): Call<List<Image>>
+    fun getLatestImages(@Query(Constants.Params.clientId) clientId: String,
+                        @Query(Constants.Params.page) page: Int = 1,
+                        @Query(Constants.Params.perPage) perPage: Int = 10,
+                        @Query(Constants.Params.orderBy) orderBy: String = "latest")
+            : Call<List<Image>>
 }

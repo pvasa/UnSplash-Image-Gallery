@@ -14,20 +14,36 @@
  */
 package com.pvryan.mobilecodingchallenge
 
+// Constant values for easy access
 object Constants {
 
-    // unsplash
+    // Unsplash api
     const val baseURLUnsplash = "https://api.unsplash.com/"
     const val appIdUnsplash = "433e7e72d2dbd376ff3f8cc4198b08f43d0923ef6134f37d1b170f2f0ff73d3e"
 
-    // request and response codes
-    const val rcExpandedImageActivity = 1
+    // Unsplash query params
+    object Params {
+        const val clientId = "client_id"
+        const val page = "page"
+        const val perPage = "per_page"
+        const val orderBy = "order_by"
+    }
 
-    // keys
-    const val keyImages = "images"
-    const val keyExpandedImage = "expandedImage"
-    const val keyPosition = "position"
+    // Keys for saving and passing data
+    object Keys {
+        const val images = "images"
+        const val expandedImage = "expandedImage"
+        const val position = "position"
+    }
 
-    // errors
-    const val errorInvalidImage = "Invalid image. Try again."
+    // Request and response codes
+    object Codes {
+        const val expandedImageActivity = 1
+    }
+
+    // Error messages
+    object Errors {
+        const val invalidImage = "Invalid image. Try again."
+        const val emptyBody = "Unsplash returned nothing. Try again."
+    }
 }

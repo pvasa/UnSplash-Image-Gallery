@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity
 import com.pvryan.mobilecodingchallenge.R
 import kotlinx.android.synthetic.main.activity_gallery.*
 
+// Activity for showing images from Unsplash
 class GalleryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +30,15 @@ class GalleryActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         supportFragmentManager.beginTransaction()
-                .replace(R.id.container, GalleryFragment.newInstance()).commit()
+                .replace(R.id.container, GalleryFragment.newInstance(),
+                        GalleryFragment::class.java.simpleName).commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        for (frag: Fragment in supportFragmentManager.fragments) {
-            frag.onActivityResult(requestCode, resultCode, data)
-        }
+
+        // Restore state to fragment
+        supportFragmentManager.findFragmentByTag(GalleryFragment::class.java.simpleName)
+                .onActivityResult(requestCode, resultCode, data)
     }
 }
