@@ -14,15 +14,19 @@
  */
 @file:Suppress("unused")
 
-package com.pvryan.mobilecodingchallenge.extensions
+package com.pvryan.mobilecodingchallenge.ui
 
 import android.animation.*
 import android.graphics.Point
 import android.graphics.Rect
+import android.support.design.widget.Snackbar
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.ImageView
+import com.pvryan.mobilecodingchallenge.R
 import kotlinx.android.synthetic.main.fragment_gallery.view.*
 
 fun View.hide() {
@@ -37,8 +41,35 @@ fun View.show() {
     this.visibility = View.VISIBLE
 }
 
-fun ImageView.zoomImageFromThumb(ivExpandedImage: ImageView, container: FrameLayout,
+
+private fun View.snack(message: String, length: Int,
+                       actionTitle: String?, action: View.OnClickListener?): Snackbar {
+    val snackbar = Snackbar.make(this, message, length)
+    if (actionTitle != null && action != null)
+        snackbar.setAction(actionTitle, action).show()
+    snackbar.show()
+    return snackbar
+}
+
+fun View.snackShort(message: String, actionTitle: String? = null,
+                    action: View.OnClickListener? = null) {
+    this.snack(message, Snackbar.LENGTH_SHORT, actionTitle, action)
+}
+
+fun View.snackLong(message: String, actionTitle: String? = null,
+                   action: View.OnClickListener? = null) {
+    this.snack(message, Snackbar.LENGTH_LONG, actionTitle, action)
+}
+
+fun View.snackIndefinite(message: String, actionTitle: String? = null,
+                         action: View.OnClickListener? = null): Snackbar
+        = this.snack(message, Snackbar.LENGTH_INDEFINITE, actionTitle, action)
+
+fun ImageView.zoomImageFromThumb(flExpandedImage: FrameLayout, container: FrameLayout,
                                  animator: Animator?) : Animator? {
+
+    val buttonExit = flExpandedImage.findViewById<ImageButton>(R.id.buttonClose)
+    val ivExpandedImage = flExpandedImage.findViewById<ImageView>(R.id.ivExpandedImage)
 
     val mShortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
     // If there's an animation in progress, cancel it
@@ -93,23 +124,24 @@ fun ImageView.zoomImageFromThumb(ivExpandedImage: ImageView, container: FrameLay
     // begins, it will position the zoomed-in view in the place of the
     // thumbnail.
     this.alpha = 0f
-    ivExpandedImage.show()
+    buttonExit.show()
+    flExpandedImage.show()
 
     // Set the pivot point for SCALE_X and SCALE_Y transformations
     // to the top-left corner of the zoomed-in view (the default
     // is the center of the view).
-    ivExpandedImage.pivotX = 0f
-    ivExpandedImage.pivotY = 0f
+    flExpandedImage.pivotX = 0f
+    flExpandedImage.pivotY = 0f
 
     // Construct and run the parallel animation of the four translation and
     // scale properties (X, Y, SCALE_X, and SCALE_Y).
     val set = AnimatorSet()
-    set.play(ObjectAnimator.ofFloat(ivExpandedImage, View.X,
+    set.play(ObjectAnimator.ofFloat(flExpandedImage, View.X,
             startBounds.left.toFloat(), finalBounds.left.toFloat()))
-            .with(ObjectAnimator.ofFloat(ivExpandedImage, View.Y,
+            .with(ObjectAnimator.ofFloat(flExpandedImage, View.Y,
                     startBounds.top.toFloat(), finalBounds.top.toFloat()))
-            .with(ObjectAnimator.ofFloat(ivExpandedImage, View.SCALE_X,
-                    startScale, 1f)).with(ObjectAnimator.ofFloat(ivExpandedImage,
+            .with(ObjectAnimator.ofFloat(flExpandedImage, View.SCALE_X,
+                    startScale, 1f)).with(ObjectAnimator.ofFloat(flExpandedImage,
             View.SCALE_Y, startScale, 1f))
     set.duration = mShortAnimationDuration.toLong()
     set.interpolator = DecelerateInterpolator()
@@ -128,7 +160,8 @@ fun ImageView.zoomImageFromThumb(ivExpandedImage: ImageView, container: FrameLay
     // Upon clicking the zoomed-in image, it should zoom back down
     // to the original bounds and show the thumbnail instead of
     // the expanded image.
-    ivExpandedImage.setOnClickListener {
+    buttonExit.setOnClickListener {
+        it.hide()
         mCurrentAnimator?.cancel()
 
         container.rvImages.show()
@@ -137,25 +170,25 @@ fun ImageView.zoomImageFromThumb(ivExpandedImage: ImageView, container: FrameLay
         // back to their original values.
         val expandedSet = AnimatorSet()
         expandedSet.play(ObjectAnimator
-                .ofFloat(ivExpandedImage, View.X, startBounds.left.toFloat()))
+                .ofFloat(flExpandedImage, View.X, startBounds.left.toFloat()))
                 .with(ObjectAnimator
-                        .ofFloat(ivExpandedImage, View.Y, startBounds.top.toFloat()))
+                        .ofFloat(flExpandedImage, View.Y, startBounds.top.toFloat()))
                 .with(ObjectAnimator
-                        .ofFloat(ivExpandedImage, View.SCALE_X, startScale))
+                        .ofFloat(flExpandedImage, View.SCALE_X, startScale))
                 .with(ObjectAnimator
-                        .ofFloat(ivExpandedImage, View.SCALE_Y, startScale))
+                        .ofFloat(flExpandedImage, View.SCALE_Y, startScale))
         expandedSet.duration = mShortAnimationDuration.toLong()
         expandedSet.interpolator = DecelerateInterpolator()
         expandedSet.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 this@zoomImageFromThumb.alpha = 1f
-                ivExpandedImage.gone()
+                flExpandedImage.gone()
                 mCurrentAnimator = null
             }
 
             override fun onAnimationCancel(animation: Animator) {
                 this@zoomImageFromThumb.alpha = 1f
-                ivExpandedImage.gone()
+                flExpandedImage.gone()
                 mCurrentAnimator = null
             }
         })

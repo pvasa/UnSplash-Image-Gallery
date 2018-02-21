@@ -12,27 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@Suppress("unused")
-internal object Versions {
+package com.pvryan.mobilecodingchallenge.data.source
 
-    // App and SDK versions
-    const val vCode = 100
-    const val vName = "1.0.0"
-    const val compileSdk = 27
-    const val minSdk = 16
-    const val targetSdk = 27
+import com.pvryan.mobilecodingchallenge.data.Image
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Query
 
-    // Dependency versions
-    const val buildGradle = "3.0.1"
-    const val kotlin = "1.2.21"
-    const val support = "27.0.2"
-    const val retrofit = "2.3.0"
-    const val glide = "4.6.1"
-
-    // Test dependency versions
-    const val junit = "4.12"
-
-    // Android test dependency versions
-    const val runner = "1.0.1"
-    const val espresso = "3.0.1"
+interface Unsplash {
+    @GET("photos")
+    fun getLatestImages(@Query("client_id") clientId: String,
+                        @Query("page") page: Int = 1,
+                        @Query("per_page") perPage: Int = 10,
+                        @Query("order_by") orderBy: String = "latest"): Call<List<Image>>
 }

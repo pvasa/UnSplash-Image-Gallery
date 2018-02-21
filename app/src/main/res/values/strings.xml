@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MobileCodingChallenge</string>
-    <string name="app_title">Unsplash\ latest</string>
+    <string name="app_title">Unsplash</string>
     <string name="desc_item_image">Item image</string>
     <string name="desc_expanded_image">Expanded image</string>
+    <string name="desc_back_button">Back button</string>
 </resources>

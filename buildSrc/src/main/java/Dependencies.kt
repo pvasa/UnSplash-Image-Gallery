@@ -20,6 +20,11 @@ internal object Dependencies {
     const val kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib-jre7:${Versions.kotlin}"
     const val appcompatV7 = "com.android.support:appcompat-v7:${Versions.support}"
     const val supportDesign = "com.android.support:design:${Versions.support}"
+    const val recyclerview = "com.android.support:recyclerview-v7:${Versions.support}"
+    const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
+    const val converterGson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
+    const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
+    const val glideCompiler = "com.github.bumptech.glide:compiler:${Versions.glide}"
 }
 
 internal object TestDependencies {
