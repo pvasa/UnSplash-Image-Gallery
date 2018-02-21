@@ -14,7 +14,7 @@
  */
 package com.pvryan.mobilecodingchallenge.ui.extensions
 
-import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 
 // Return current screen orientation
-fun FragmentActivity.getOrientation() = this.resources.configuration.orientation
+fun AppCompatActivity.getOrientation() = this.resources.configuration.orientation

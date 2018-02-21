@@ -44,5 +44,8 @@ class ExpandedImagePagerAdapter(fm: FragmentManager, extras: Bundle) :
     override fun getCount(): Int = images.size
 
     // Return page title (publisher's name) for each image/page
-    override fun getPageTitle(position: Int): CharSequence? = images[position].user.name
+    override fun getPageTitle(position: Int): CharSequence? {
+        val image = images[position]
+        return "${image.user.name} (${image.width} x ${image.height})"
+    }
 }

@@ -17,15 +17,16 @@ package com.pvryan.mobilecodingchallenge.ui
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.adapters.ExpandedImagePagerAdapter
 import kotlinx.android.synthetic.main.activity_expanded_image.*
 
 // Displays view pager for expanded images
-class ExpandedImageActivity : FragmentActivity() {
+class ExpandedImageActivity : AppCompatActivity() {
 
     // For sending current image position back to the grid view
     private val resultIntent = Intent()
@@ -55,7 +56,6 @@ class ExpandedImageActivity : FragmentActivity() {
             }
         })
 
-        // Close current activity and go back to grid
         buttonClose.setOnClickListener {
             onBackPressed()
         }
@@ -65,5 +65,6 @@ class ExpandedImageActivity : FragmentActivity() {
         // Send current state to grid activity
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 }

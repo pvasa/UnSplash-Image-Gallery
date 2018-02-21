@@ -16,6 +16,7 @@ package com.pvryan.mobilecodingchallenge.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
@@ -29,6 +30,9 @@ import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.data.Image
 import com.pvryan.mobilecodingchallenge.ui.ExpandedImageActivity
 import com.pvryan.mobilecodingchallenge.ui.GalleryActivity
+import com.transitionseverywhere.Explode
+import com.transitionseverywhere.Transition
+import com.transitionseverywhere.TransitionManager
 import kotlinx.android.synthetic.main.item_image.view.*
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -69,8 +73,28 @@ class GalleryAdapter(private val context: Context, val images: ArrayList<Image>)
             args.putParcelableArrayList(Constants.Keys.images, images)
             args.putInt(Constants.Keys.position, position)
             intent.putExtras(args)
-            (context as GalleryActivity).startActivityForResult(
+
+            val viewRect = Rect()
+            it.getGlobalVisibleRect(viewRect)
+
+            // create Explode transition with epicenter
+            val explode = Explode()
+                    .setEpicenterCallback(object : Transition.EpicenterCallback() {
+                        override fun onGetEpicenter(transition: Transition): Rect {
+                            return viewRect
+                        }
+                    })
+            explode.duration = it.context.resources.getInteger(
+                    android.R.integer.config_shortAnimTime).toLong()
+
+            TransitionManager.beginDelayedTransition(it.parent as ViewGroup, explode)
+
+            with(context as GalleryActivity) {
+                this.startActivityForResult(
                     intent, Constants.Codes.expandedImageActivity)
+                this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+            }
+
         }
     }
 

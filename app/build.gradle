@@ -37,6 +37,8 @@ dependencies {
     implementation Dependencies.retrofit
     implementation Dependencies.converterGson
     implementation Dependencies.glide
+    implementation Dependencies.transitionsEverywhere
+
     annotationProcessor Dependencies.glideCompiler
 
     testImplementation TestDependencies.junit

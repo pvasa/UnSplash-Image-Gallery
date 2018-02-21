@@ -31,9 +31,9 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             android:layout_weight="1"
-            android:background="?attr/colorPrimary"
+            android:background="@color/primary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="@string/app_title" />
 
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/appbar_padding_top"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_marginTop="?android:attr/actionBarSize">
 
     </FrameLayout>
 

@@ -25,6 +25,7 @@ internal object Dependencies {
     const val converterGson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
     const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
     const val glideCompiler = "com.github.bumptech.glide:compiler:${Versions.glide}"
+    const val transitionsEverywhere = "com.andkulikov:transitionseverywhere:${Versions.transitionsEverywhere}"
 }
 
 internal object TestDependencies {

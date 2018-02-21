@@ -20,18 +20,24 @@ import android.os.Parcelable
 @Suppress("MemberVisibilityCanBePrivate")
 // Image model for Unsplash images
 data class Image(val id: String,
+                 val width: Int,
+                 val height: Int,
                  val description: String?,
                  val urls: Urls,
                  val user: User) : Parcelable {
 
     constructor(parcel: Parcel) :
             this(parcel.readString(),
+                    parcel.readInt(),
+                    parcel.readInt(),
                     parcel.readString(),
                     parcel.readParcelable<Urls>(Urls::class.java.classLoader),
                     parcel.readParcelable<User>(User::class.java.classLoader))
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
+        parcel.writeInt(width)
+        parcel.writeInt(height)
         parcel.writeString(description)
         parcel.writeParcelable(urls, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
         parcel.writeParcelable(user, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)

@@ -28,6 +28,7 @@ internal object Versions {
     const val support = "27.0.2"
     const val retrofit = "2.3.0"
     const val glide = "4.6.1"
+    const val transitionsEverywhere = "1.7.8"
 
     // Test dependency versions
     const val junit = "4.12"
