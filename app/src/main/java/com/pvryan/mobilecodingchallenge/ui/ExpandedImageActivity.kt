@@ -15,20 +15,19 @@
 package com.pvryan.mobilecodingchallenge.ui
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
-import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
-import android.util.Log
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.adapters.ExpandedImagePagerAdapter
 import kotlinx.android.synthetic.main.activity_expanded_image.*
 
+// Displays view pager for expanded images
 class ExpandedImageActivity : FragmentActivity() {
 
+    // For sending current image position back to the grid view
     private val resultIntent = Intent()
     private val resultArgs = Bundle()
 
@@ -36,10 +35,14 @@ class ExpandedImageActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expanded_image)
 
+        // Initiate view pager
         pager.adapter = ExpandedImagePagerAdapter(supportFragmentManager, intent.extras)
-        pager.setCurrentItem(
-                intent.extras.getInt(Constants.keyPosition), false)
 
+        // Set current position to the image selected from grid
+        pager.setCurrentItem(
+                intent.extras.getInt(Constants.Keys.position), false)
+
+        // Keep on saving current position on swipe to send back to grid
         pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
 
@@ -47,17 +50,19 @@ class ExpandedImageActivity : FragmentActivity() {
                                         positionOffsetPixels: Int) {}
 
             override fun onPageSelected(position: Int) {
-                resultArgs.putInt(Constants.keyPosition, position)
+                resultArgs.putInt(Constants.Keys.position, position)
                 resultIntent.putExtras(resultArgs)
             }
         })
 
+        // Close current activity and go back to grid
         buttonClose.setOnClickListener {
             onBackPressed()
         }
     }
 
     override fun onBackPressed() {
+        // Send current state to grid activity
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
     }

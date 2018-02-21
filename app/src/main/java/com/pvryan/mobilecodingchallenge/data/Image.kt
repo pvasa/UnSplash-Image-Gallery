@@ -18,6 +18,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 @Suppress("MemberVisibilityCanBePrivate")
+// Image model for Unsplash images
 data class Image(val id: String,
                  val description: String?,
                  val urls: Urls,

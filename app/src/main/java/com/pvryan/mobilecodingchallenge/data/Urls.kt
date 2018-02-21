@@ -18,6 +18,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 @Suppress("MemberVisibilityCanBePrivate")
+// Urls model for multi size images
 data class Urls(val raw: String,
                 val full: String,
                 val regular: String,

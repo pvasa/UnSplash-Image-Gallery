@@ -17,6 +17,7 @@ package com.pvryan.mobilecodingchallenge.data
 import android.os.Parcel
 import android.os.Parcelable
 
+// User model for publisher of the image
 data class User(val name: String) : Parcelable {
     constructor(parcel: Parcel) : this(parcel.readString())
 

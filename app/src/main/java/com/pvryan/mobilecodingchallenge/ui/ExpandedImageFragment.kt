@@ -24,8 +24,10 @@ import com.bumptech.glide.Glide
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.data.Image
+import com.pvryan.mobilecodingchallenge.ui.extensions.snackLong
 import kotlinx.android.synthetic.main.fragment_expanded_image.*
 
+// Displays expanded image selected from grid
 class ExpandedImageFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -36,18 +38,21 @@ class ExpandedImageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val image = arguments?.getParcelable<Image>(Constants.keyExpandedImage)
+        // Fetch image to load
+        val image = arguments?.getParcelable<Image>(Constants.Keys.expandedImage)
 
         if (image == null) {
-            view.snackLong(Constants.errorInvalidImage)
+            view.snackLong(Constants.Errors.invalidImage)
             return
         }
 
+        // Load the image
         Glide.with(view.context)
                 .asBitmap()
                 .load(Uri.parse(image.urls.full))
                 .into(ivExpandedImage)
 
+        // Show image publisher's name
         tvName.text = image.user.name
     }
 
