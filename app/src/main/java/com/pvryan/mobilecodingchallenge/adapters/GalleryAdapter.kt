@@ -30,14 +30,19 @@ import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.data.Image
 import com.pvryan.mobilecodingchallenge.ui.ExpandedImageActivity
 import com.pvryan.mobilecodingchallenge.ui.GalleryActivity
+import com.pvryan.mobilecodingchallenge.ui.LoadImagesListener
+import com.pvryan.mobilecodingchallenge.utils.RetrofitHelper
 import com.transitionseverywhere.Explode
 import com.transitionseverywhere.Transition
 import com.transitionseverywhere.TransitionManager
 import kotlinx.android.synthetic.main.item_image.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 @Suppress("MemberVisibilityCanBePrivate")
 // Adapter for recycler view showing images in grid layout
-class GalleryAdapter(private val context: Context, val images: ArrayList<Image>) :
+class GalleryAdapter(private val context: Context, val images: ArrayList<Image> = arrayListOf()) :
         RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
     // View holder of each image
@@ -96,6 +101,46 @@ class GalleryAdapter(private val context: Context, val images: ArrayList<Image>)
             }
 
         }
+    }
+
+    // Remove all items and update recyclerview
+    fun removeAllItems() {
+        val count = images.size
+        images.clear()
+        notifyItemRangeRemoved(0, count)
+    }
+
+    // Insert items and update recyclerview
+    fun insertItems(newImages: ArrayList<Image>) {
+        val positionStart = images.size
+        images.addAll(newImages)
+        notifyItemRangeInserted(positionStart, newImages.size)
+    }
+
+    // Hit Unsplash api to retrieve images
+    fun loadImages(listener: LoadImagesListener, page: Int = 1) {
+
+        RetrofitHelper.getUnsplashApi().getLatestImages(Constants.appIdUnsplash,
+                page = page, perPage = Constants.imagesPerPage)
+                .enqueue(object : Callback<List<Image>> {
+
+                    override fun onFailure(call: Call<List<Image>>?, t: Throwable?) {
+                        listener.onFailure(t)
+                    }
+
+                    override fun onResponse(call: Call<List<Image>>?,
+                                            response: Response<List<Image>>) {
+
+                        if (response.body() != null) {
+                            val newImages = response.body() as ArrayList<Image>
+                            insertItems(newImages)
+                        } else onFailure(call, Throwable(Constants.Errors.emptyBody))
+
+                        response.headers()?.let {
+                            listener.onTotalImagesAvailable(it.get("X-Total")?.toInt() ?: 0)
+                        }
+                    }
+                })
     }
 
     // View holder of each image
