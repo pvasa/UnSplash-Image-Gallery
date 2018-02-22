@@ -20,6 +20,7 @@ object Constants {
     // Unsplash api
     const val baseURLUnsplash = "https://api.unsplash.com/"
     const val appIdUnsplash = "433e7e72d2dbd376ff3f8cc4198b08f43d0923ef6134f37d1b170f2f0ff73d3e"
+    const val imagesPerPage = 30
 
     // Unsplash query params
     object Params {

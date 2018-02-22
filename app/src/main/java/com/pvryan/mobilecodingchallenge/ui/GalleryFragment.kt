@@ -21,26 +21,36 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.adapters.GalleryAdapter
-import com.pvryan.mobilecodingchallenge.data.Image
 import com.pvryan.mobilecodingchallenge.ui.extensions.getOrientation
 import com.pvryan.mobilecodingchallenge.ui.extensions.snackLong
-import com.pvryan.mobilecodingchallenge.utils.RetrofitHelper
 import kotlinx.android.synthetic.main.fragment_gallery.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 // Fragment showing images from Unsplash in a grid view
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment(), LoadImagesListener {
 
-    // List of latest images retrieved from unsplash
-    var images: ArrayList<Image>? = null
+    lateinit var mAdapter: GalleryAdapter
+
+    private val rvScrollListener = object : RecyclerView.OnScrollListener() {
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            val lastPosition = (rvImages.layoutManager as GridLayoutManager)
+                    .findLastCompletelyVisibleItemPosition()
+
+            if (lastPosition == (mAdapter.images.size - 1)) {
+                val newPage = (mAdapter.images.size / Constants.imagesPerPage) + 1
+                mAdapter.loadImages(this@GalleryFragment, newPage)
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -55,30 +65,17 @@ class GalleryFragment : Fragment() {
                 == Configuration.ORIENTATION_LANDSCAPE) 4 else 3
 
         // Initialize recycler view
-        rvImages.setHasFixedSize(false)
+        rvImages.setHasFixedSize(true)
         rvImages.layoutManager = GridLayoutManager(view.context, spanCount)
 
         // If new instance, retrieve new images
         if (savedInstanceState == null) {
-
-            // Hit Unsplash api to retrieve new images
-            RetrofitHelper.getUnsplashApi().getLatestImages(Constants.appIdUnsplash, perPage = 30)
-                    .enqueue(object : Callback<List<Image>> {
-
-                        override fun onFailure(call: Call<List<Image>>?, t: Throwable?) {
-                            t?.let { view.snackLong(it.localizedMessage) }
-                        }
-
-                        override fun onResponse(call: Call<List<Image>>?,
-                                                response: Response<List<Image>>) {
-                            if (response.body() != null) {
-                                // Populate recycler view with new images
-                                images = response.body() as ArrayList<Image>
-                                rvImages.adapter = GalleryAdapter(view.context, ArrayList(images))
-                            } else onFailure(call, Throwable(Constants.Errors.emptyBody))
-                        }
-                    })
+            rvImages.adapter = GalleryAdapter(activity as Context)
+            mAdapter = rvImages.adapter as GalleryAdapter
+            mAdapter.loadImages(this)
         }
+
+        rvImages.addOnScrollListener(rvScrollListener)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -86,9 +83,15 @@ class GalleryFragment : Fragment() {
 
         // Restore image position in recycler view
         savedInstanceState?.let {
-            images = savedInstanceState.getParcelableArrayList(Constants.Keys.images)
-            if (rvImages.adapter == null)
-                rvImages.adapter = GalleryAdapter(activity as Context, ArrayList(images))
+            if (rvImages.adapter == null) {
+                mAdapter = GalleryAdapter(activity as Context)
+                rvImages.adapter = mAdapter
+            } else {
+                mAdapter = rvImages.adapter as GalleryAdapter
+                mAdapter.removeAllItems()
+            }
+            mAdapter.insertItems(savedInstanceState
+                    .getParcelableArrayList(Constants.Keys.images))
             rvImages.scrollToPosition(savedInstanceState.getInt(Constants.Keys.position))
         }
     }
@@ -109,12 +112,24 @@ class GalleryFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
 
         // Save image list and current image position
-        if (images != null) outState.putParcelableArrayList(Constants.Keys.images, images)
+        outState.putParcelableArrayList(Constants.Keys.images, mAdapter.images)
         rvImages.adapter?.let {
             outState.putInt(Constants.Keys.position,
                     (it as GalleryAdapter).viewHolder.adapterPosition)
         }
         super.onSaveInstanceState(outState)
+    }
+
+    // Called when there is totalImagesAvailable count fetched from Unsplash
+    override fun onTotalImagesAvailable(total: Int) {
+        if (mAdapter.images.size == total)
+            // Remove scroll listener if all images fetched
+            rvImages.removeOnScrollListener(rvScrollListener)
+    }
+
+    // Failed to fetch images
+    override fun onFailure(t: Throwable?) {
+        t?.let { rvImages.snackLong(it.localizedMessage) }
     }
 
     companion object {
