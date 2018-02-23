@@ -30,9 +30,6 @@ import kotlinx.android.synthetic.main.fragment_expanded_image.*
 // Displays expanded image selected from grid
 class ExpandedImageFragment : Fragment() {
 
-    // Fetch image to load
-    var image: Image? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_expanded_image, container, false)
@@ -40,7 +37,7 @@ class ExpandedImageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        image = arguments?.getParcelable(Constants.Keys.expandedImage)
+        val image = arguments?.getParcelable<Image>(Constants.Keys.expandedImage)
 
         if (image == null) {
             view.snackLong(Constants.Errors.invalidImage)
@@ -50,7 +47,7 @@ class ExpandedImageFragment : Fragment() {
         // Load the image
         Glide.with(view.context)
                 .asBitmap()
-                .load(Uri.parse(image?.urls?.full))
+                .load(Uri.parse(image.urls.full))
                 .into(ivExpandedImage)
     }
 

@@ -25,11 +25,11 @@ import java.util.ArrayList
 
 @Suppress("MemberVisibilityCanBePrivate")
 // Adapter for view pager in expanded image layout
-class ExpandedImagePagerAdapter(fm: FragmentManager, extras: Bundle) :
+class ExpandedImagePagerAdapter(fm: FragmentManager) :
         FragmentStatePagerAdapter(fm) {
 
     // Fetch images to load
-    val images: ArrayList<Image> = extras.getParcelableArrayList(Constants.Keys.images)
+    val images: ArrayList<Image> = Constants.images
 
     // Return a new fragment for image at current position
     override fun getItem(position: Int): Fragment {
