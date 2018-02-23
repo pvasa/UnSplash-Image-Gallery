@@ -36,7 +36,6 @@ object Constants {
 
     // Keys for saving and passing data
     object Keys {
-        const val images = "images"
         const val expandedImage = "expandedImage"
         const val position = "position"
     }
@@ -48,7 +47,8 @@ object Constants {
 
     // Error messages
     object Errors {
+        const val noNetwork = "Network not available."
         const val invalidImage = "Invalid image. Try again."
-        const val emptyBody = "Unsplash returned nothing. Try again."
+        const val emptyBody = "Unsplash returned nothing. Try again after sometime."
     }
 }

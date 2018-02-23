@@ -14,7 +14,16 @@
  */
 package com.pvryan.mobilecodingchallenge.ui.extensions
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.support.v7.app.AppCompatActivity
 
 // Return current screen orientation
 fun AppCompatActivity.getOrientation() = this.resources.configuration.orientation
+
+// Check if internet connection is available
+fun AppCompatActivity.isNetworkAvailable(): Boolean {
+    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork = cm.activeNetworkInfo
+    return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+}

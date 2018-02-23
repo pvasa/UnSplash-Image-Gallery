@@ -23,14 +23,24 @@ import kotlinx.android.synthetic.main.activity_gallery.*
 // Activity for showing images from Unsplash
 class GalleryActivity : AppCompatActivity() {
 
+    private var galleryFragment: GalleryFragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
         setSupportActionBar(toolbar)
 
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.container, GalleryFragment.newInstance(),
-                        GalleryFragment::class.java.simpleName).commit()
+        // Get an instance of GalleryFragment
+        galleryFragment = if (savedInstanceState != null)
+            supportFragmentManager.findFragmentByTag(
+                    GalleryFragment::class.java.simpleName) as GalleryFragment
+        else GalleryFragment.newInstance()
+
+        // Load fragment only if it no already in the layout
+        if (galleryFragment?.isInLayout == false)
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, galleryFragment,
+                            GalleryFragment::class.java.simpleName).commit()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
