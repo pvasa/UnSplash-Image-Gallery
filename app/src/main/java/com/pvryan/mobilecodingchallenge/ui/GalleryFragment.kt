@@ -88,11 +88,9 @@ class GalleryFragment : Fragment(), LoadImagesListener {
                 rvImages.adapter = mAdapter
             } else {
                 mAdapter = rvImages.adapter as GalleryAdapter
-                mAdapter.removeAllItems()
             }
-            mAdapter.insertItems(savedInstanceState
-                    .getParcelableArrayList(Constants.Keys.images))
-            rvImages.scrollToPosition(savedInstanceState.getInt(Constants.Keys.position))
+            val lastPosition = savedInstanceState.getInt(Constants.Keys.position)
+            rvImages.scrollToPosition(lastPosition)
         }
     }
 
@@ -111,8 +109,7 @@ class GalleryFragment : Fragment(), LoadImagesListener {
 
     override fun onSaveInstanceState(outState: Bundle) {
 
-        // Save image list and current image position
-        outState.putParcelableArrayList(Constants.Keys.images, mAdapter.images)
+        // Current image position
         rvImages.adapter?.let {
             outState.putInt(Constants.Keys.position,
                     (it as GalleryAdapter).viewHolder.adapterPosition)

@@ -32,12 +32,12 @@ data class Urls(val raw: String,
             parcel.readString(),
             parcel.readString())
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(raw)
-        dest.writeString(full)
-        dest.writeString(regular)
-        dest.writeString(small)
-        dest.writeString(thumb)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(raw)
+        parcel.writeString(full)
+        parcel.writeString(regular)
+        parcel.writeString(small)
+        parcel.writeString(thumb)
     }
 
     override fun describeContents(): Int {

@@ -19,7 +19,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.adapters.ExpandedImagePagerAdapter
@@ -37,7 +36,7 @@ class ExpandedImageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_expanded_image)
 
         // Initiate view pager
-        pager.adapter = ExpandedImagePagerAdapter(supportFragmentManager, intent.extras)
+        pager.adapter = ExpandedImagePagerAdapter(supportFragmentManager)
 
         // Set current position to the image selected from grid
         pager.setCurrentItem(

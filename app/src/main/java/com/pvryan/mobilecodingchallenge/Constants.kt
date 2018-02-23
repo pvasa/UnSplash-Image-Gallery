@@ -14,8 +14,12 @@
  */
 package com.pvryan.mobilecodingchallenge
 
+import com.pvryan.mobilecodingchallenge.data.Image
+
 // Constant values for easy access
 object Constants {
+
+    val images: ArrayList<Image> = arrayListOf()
 
     // Unsplash api
     const val baseURLUnsplash = "https://api.unsplash.com/"
