@@ -3,6 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    dataBinding {
+        enabled = true
+    }
     compileSdkVersion Versions.compileSdk
     defaultConfig {
         applicationId "com.pvryan.mobilecodingchallenge"
@@ -34,10 +37,12 @@ dependencies {
     implementation Dependencies.appcompatV7
     implementation Dependencies.supportDesign
     implementation Dependencies.recyclerview
+    implementation Dependencies.lifecycleExtensions
     implementation Dependencies.retrofit
     implementation Dependencies.converterGson
     implementation Dependencies.glide
 
+    annotationProcessor Dependencies.lifecycleCompiler
     annotationProcessor Dependencies.glideCompiler
 
     testImplementation TestDependencies.junit

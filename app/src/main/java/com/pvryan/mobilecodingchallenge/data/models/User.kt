@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.data
+package com.pvryan.mobilecodingchallenge.data.models
 
 import android.os.Parcel
 import android.os.Parcelable

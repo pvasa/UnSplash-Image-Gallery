@@ -14,17 +14,15 @@
  */
 package com.pvryan.mobilecodingchallenge
 
-import com.pvryan.mobilecodingchallenge.data.Image
-
 // Constant values for easy access
 object Constants {
-
-    val images: ArrayList<Image> = arrayListOf()
 
     // Unsplash api
     const val baseURLUnsplash = "https://api.unsplash.com/"
     const val appIdUnsplash = "433e7e72d2dbd376ff3f8cc4198b08f43d0923ef6134f37d1b170f2f0ff73d3e"
+    const val defaultPage = 1
     const val imagesPerPage = 30
+    const val defaultPosition = 0
 
     // Unsplash query params
     object Params {
@@ -45,10 +43,16 @@ object Constants {
         const val expandedImageActivity = 1
     }
 
+    object Warnings {
+        const val singleObserverNotified =
+                "Multiple observers registered but only one will be notified of changes."
+    }
+
     // Error messages
     object Errors {
         const val noNetwork = "Network not available."
         const val invalidImage = "Invalid image. Try again."
-        const val emptyBody = "Unsplash returned nothing. Try again after sometime."
+        const val unknownError = "Unknown error while fetching images. Try again."
+        const val invalidMessageType = "Data-type of message parameter is invalid."
     }
 }

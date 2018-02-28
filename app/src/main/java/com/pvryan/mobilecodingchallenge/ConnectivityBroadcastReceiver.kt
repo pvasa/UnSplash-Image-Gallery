@@ -12,18 +12,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.ui.extensions
+package com.pvryan.mobilecodingchallenge
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
-import android.support.v7.app.AppCompatActivity
 
-// Return current screen orientation
-fun AppCompatActivity.getOrientation() = this.resources.configuration.orientation
+class ConnectivityBroadcastReceiver(
+        private val connectivityListener: ConnectivityListener) :
+        BroadcastReceiver() {
 
-// Check if internet connection is available
-fun AppCompatActivity.isNetworkAvailable(): Boolean {
-    val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val activeNetwork = cm.activeNetworkInfo
-    return activeNetwork != null && activeNetwork.isConnectedOrConnecting
+    override fun onReceive(context: Context?, intent: Intent?) {
+        if (intent?.action == ConnectivityManager.CONNECTIVITY_ACTION)
+            connectivityListener.onConnectivityStatusChanged()
+    }
 }

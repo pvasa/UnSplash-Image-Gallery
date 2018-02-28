@@ -15,10 +15,12 @@
 @file:Suppress("unused")
 
 // Extensions functions for View class
-package com.pvryan.mobilecodingchallenge.ui.extensions
+package com.pvryan.mobilecodingchallenge.extensions
 
 import android.support.design.widget.Snackbar
 import android.view.View
+import com.pvryan.mobilecodingchallenge.Constants
+import com.pvryan.mobilecodingchallenge.R
 
 // View visibilities
 fun View.hide() {
@@ -31,23 +33,31 @@ fun View.show() {
     this.visibility = View.VISIBLE
 }
 
+@Throws(IllegalArgumentException::class)
 // Showing snackbar
-private fun View.snack(message: String, length: Int,
-                       actionTitle: String?, action: View.OnClickListener?): Snackbar {
-    val snackbar = Snackbar.make(this, message, length)
-    if (actionTitle != null && action != null)
+private fun <T> View.snack(message: T, length: Int,
+                       actionTitle: Int, action: View.OnClickListener?): Snackbar {
+    val snackbar: Snackbar = when (message) {
+        is String -> Snackbar.make(this, message, length)
+        is Int -> Snackbar.make(this, message, length)
+        else -> { throw IllegalArgumentException(Constants.Errors.invalidMessageType)}
+    }
+    if (action != null)
         snackbar.setAction(actionTitle, action).show()
     snackbar.show()
     return snackbar
 }
-fun View.snackShort(message: String, actionTitle: String? = null,
+@Throws(IllegalArgumentException::class)
+fun <T> View.snackShort(message: T, actionTitle: Int = R.string.text_dismiss,
                     action: View.OnClickListener? = null) {
     this.snack(message, Snackbar.LENGTH_SHORT, actionTitle, action)
 }
-fun View.snackLong(message: String, actionTitle: String? = null,
+@Throws(IllegalArgumentException::class)
+fun <T> View.snackLong(message: T, actionTitle: Int = R.string.text_dismiss,
                    action: View.OnClickListener? = null) {
     this.snack(message, Snackbar.LENGTH_LONG, actionTitle, action)
 }
-fun View.snackIndefinite(message: String, actionTitle: String? = null,
-                         action: View.OnClickListener? = null): Snackbar
+@Throws(IllegalArgumentException::class)
+fun <T> View.snackIndefinite(message: T, actionTitle: Int = R.string.text_dismiss,
+                             action: View.OnClickListener? = null): Snackbar
         = this.snack(message, Snackbar.LENGTH_INDEFINITE, actionTitle, action)

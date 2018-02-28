@@ -12,9 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.ui
+package com.pvryan.mobilecodingchallenge
 
-interface LoadImagesListener {
-    fun onTotalImagesAvailable(total: Int)
-    fun onFailure(t: Throwable?)
+interface ConnectivityListener {
+    fun onConnectivityStatusChanged()
 }

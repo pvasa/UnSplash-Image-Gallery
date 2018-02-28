@@ -12,19 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.utils
+package com.pvryan.mobilecodingchallenge.gallery
 
-import com.pvryan.mobilecodingchallenge.Constants
-import com.pvryan.mobilecodingchallenge.data.source.Unsplash
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-
-class RetrofitHelper private constructor() {
-
-    companion object {
-        fun getUnsplashApi() = Retrofit.Builder()
-                .baseUrl(Constants.baseURLUnsplash)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build().create(Unsplash::class.java) as Unsplash
-    }
+interface ImageItemUserActionListener {
+    fun onImageClick(position: Int)
 }
