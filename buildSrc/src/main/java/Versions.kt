@@ -16,11 +16,12 @@
 internal object Versions {
 
     // App and SDK versions
-    const val vCode = 100
-    const val vName = "1.0.0"
+    const val vCode = 101
+    const val vName = "1.0.1"
     const val compileSdk = 27
     const val minSdk = 16
     const val targetSdk = 27
+    const val lifecycleExtensions = "1.1.0"
 
     // Dependency versions
     const val buildGradle = "3.0.1"

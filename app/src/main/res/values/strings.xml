@@ -6,4 +6,6 @@
     <string name="desc_back_button">Back button</string>
 
     <string name="tv_resolution">"%d\ x\ %d</string>
+    <string name="text_try_again">Try\ again</string>
+    <string name="text_dismiss">Dismiss</string>
 </resources>

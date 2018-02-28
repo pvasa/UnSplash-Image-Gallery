@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.ui
+package com.pvryan.mobilecodingchallenge.gallery
 
 import android.net.Uri
 import android.os.Bundle
@@ -23,8 +23,8 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
-import com.pvryan.mobilecodingchallenge.data.Image
-import com.pvryan.mobilecodingchallenge.ui.extensions.snackLong
+import com.pvryan.mobilecodingchallenge.data.models.Image
+import com.pvryan.mobilecodingchallenge.extensions.snackLong
 import kotlinx.android.synthetic.main.fragment_expanded_image.*
 
 // Displays expanded image selected from grid

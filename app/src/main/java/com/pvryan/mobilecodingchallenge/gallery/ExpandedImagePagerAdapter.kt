@@ -12,24 +12,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.adapters
+package com.pvryan.mobilecodingchallenge.gallery
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import com.pvryan.mobilecodingchallenge.Constants
-import com.pvryan.mobilecodingchallenge.data.Image
-import com.pvryan.mobilecodingchallenge.ui.ExpandedImageFragment
+import com.pvryan.mobilecodingchallenge.data.models.Image
+import com.pvryan.mobilecodingchallenge.gallery.ExpandedImageFragment
 import java.util.ArrayList
 
 @Suppress("MemberVisibilityCanBePrivate")
 // Adapter for view pager in expanded image layout
-class ExpandedImagePagerAdapter(fm: FragmentManager) :
+class ExpandedImagePagerAdapter(private val images: ArrayList<Image>, fm: FragmentManager) :
         FragmentStatePagerAdapter(fm) {
-
-    // Fetch images to load
-    val images: ArrayList<Image> = Constants.images
 
     // Return a new fragment for image at current position
     override fun getItem(position: Int): Fragment {
