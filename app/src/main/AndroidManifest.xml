@@ -11,17 +11,28 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar"
+        android:theme="@style/AppTheme.WindowTranslucent"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor">
 
-        <activity android:name=".gallery.GalleryActivity">
+        <activity
+            android:name=".galleryGrid.GalleryGridActivity"
+            android:configChanges="orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".galleryViewPager.GalleryViewPagerActivity"
+            android:configChanges="orientation"
+            android:parentActivityName=".galleryGrid.GalleryGridActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".galleryGrid.GalleryGridActivity" />
         </activity>
 
     </application>

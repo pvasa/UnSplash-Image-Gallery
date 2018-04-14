@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.gallery
+package com.pvryan.mobilecodingchallenge.galleryViewPager
 
 import android.net.Uri
 import android.os.Bundle
@@ -25,13 +25,18 @@ import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import com.pvryan.mobilecodingchallenge.extensions.snackLong
+import com.pvryan.mobilecodingchallenge.galleryGrid.GalleryGridActivity
+import com.pvryan.mobilecodingchallenge.galleryGrid.GalleryViewModel
 import kotlinx.android.synthetic.main.fragment_expanded_image.*
 
 // Displays expanded image selected from grid
 class ExpandedImageFragment : Fragment() {
 
+    private lateinit var viewModel: GalleryViewModel
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        viewModel = (activity as GalleryGridActivity).obtainViewModel()
         return inflater.inflate(R.layout.fragment_expanded_image, container, false)
     }
 
@@ -44,6 +49,10 @@ class ExpandedImageFragment : Fragment() {
             return
         }
 
+        flExpandedImage.setOnClickListener {
+            viewModel.fullScreen.value = (viewModel.fullScreen.value == false)
+        }
+
         // Load the image
         Glide.with(view.context)
                 .asBitmap()
@@ -52,6 +61,11 @@ class ExpandedImageFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() = ExpandedImageFragment()
+        fun newInstance(args: Bundle? = null)
+                : ExpandedImageFragment {
+            val expandedImageFragment = ExpandedImageFragment()
+            expandedImageFragment.arguments = args
+            return expandedImageFragment
+        }
     }
 }

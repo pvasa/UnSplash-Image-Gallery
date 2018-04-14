@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.gallery
+package com.pvryan.mobilecodingchallenge.galleryGrid
 
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
@@ -20,20 +20,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import kotlinx.android.synthetic.main.item_image.view.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 // Adapter for recycler view showing images in grid layout
-class GalleryAdapter(private val images: ArrayList<Image>,
-                     private val userActionListener: ImageItemUserActionListener) :
-        RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
+class GalleryGridAdapter(private val images: ArrayList<Image>,
+                         private val userActionListener: ImageItemUserActionListener) :
+        RecyclerView.Adapter<GalleryGridAdapter.GalleryViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GalleryViewHolder {
-        val itemView = LayoutInflater.from(parent?.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_image, parent, false)
         return GalleryViewHolder(itemView, userActionListener)
     }
@@ -52,12 +50,10 @@ class GalleryAdapter(private val images: ArrayList<Image>,
             RecyclerView.ViewHolder(itemView) {
 
         fun bindImage(image: Image, position: Int) {
-            val options = RequestOptions().diskCacheStrategy(DiskCacheStrategy.DATA)
-            // Load image with regular quality
+            // Load image with thumb quality
             Glide.with(itemView.context)
                     .asBitmap()
-                    .apply(options)
-                    .load(Uri.parse(image.urls.regular))
+                    .load(Uri.parse(image.urls.thumb))
                     .into(itemView.ivImage)
             itemView.setOnClickListener { userActionListener.onImageClick(position) }
         }

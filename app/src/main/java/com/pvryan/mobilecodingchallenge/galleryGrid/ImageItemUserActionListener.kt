@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.gallery
+package com.pvryan.mobilecodingchallenge.galleryGrid
 
 interface ImageItemUserActionListener {
     fun onImageClick(position: Int)
