@@ -12,17 +12,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.data.source
+package com.pvryan.mobilecodingchallenge.data.source.remote
 
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.data.models.Image
+import com.pvryan.mobilecodingchallenge.data.source.ImagesDataSource
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ImagesUnsplashDataSource : ImagesDataSource {
+class ImagesRemoteDataSource : ImagesDataSource {
+
+    @Throws(IllegalAccessError::class)
+    override fun saveImages(images: ArrayList<Image>) {
+        // Only used for local saves
+        throw IllegalAccessError(Constants.Errors.illegalAccessErrorRemoteSaves)
+    }
+
+    @Throws(IllegalAccessError::class)
+    override fun loadImages(): ArrayList<Image> {
+        // Only used for local loads
+        throw IllegalAccessError(Constants.Errors.illegalAccessErrorLocalLoads)
+    }
 
     override fun loadImages(callback: ImagesDataSource.LoadImagesCallback,
                             page: Int, imagesPerPage: Int) {

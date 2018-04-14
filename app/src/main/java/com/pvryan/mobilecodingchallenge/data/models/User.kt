@@ -29,12 +29,7 @@ data class User(val name: String) : Parcelable {
     override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<User> {
-        override fun createFromParcel(parcel: Parcel): User {
-            return User(parcel)
-        }
-
-        override fun newArray(size: Int): Array<User?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel): User = User(parcel)
+        override fun newArray(size: Int): Array<User?> = arrayOfNulls(size)
     }
 }

@@ -40,16 +40,10 @@ data class Urls(val raw: String,
         parcel.writeString(thumb)
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<Urls> {
-        override fun createFromParcel(parcel: Parcel): Urls {
-            return Urls(parcel)
-        }
-        override fun newArray(size: Int): Array<Urls?> {
-            return arrayOfNulls(size)
-        }
+        override fun createFromParcel(parcel: Parcel): Urls = Urls(parcel)
+        override fun newArray(size: Int): Array<Urls?> = arrayOfNulls(size)
     }
 }

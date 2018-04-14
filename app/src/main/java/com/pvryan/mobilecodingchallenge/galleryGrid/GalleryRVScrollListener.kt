@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pvryan.mobilecodingchallenge.gallery
+package com.pvryan.mobilecodingchallenge.galleryGrid
 
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
