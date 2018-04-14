@@ -1,18 +1,48 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+ext {
+    // App and SDK versions
+    ver_code = 101
+    ver_name = '1.0.1'
+    compile_sdk = 27
+    min_sdk = 16
+    target_sdk = 27
+    lifecycle_extensions = '1.1.1'
+
+    // Dependency versions
+    kotlin = '1.2.31'
+    support = '27.1.1'
+    retrofit = '2.3.0'
+    glide = '4.6.1'
+    transitions_everywhere = '1.7.8'
+    room = '1.0.0'
+
+    // Test dependency versions
+    junit = '4.12'
+
+    // Android test dependency versions
+    runner = '1.0.1'
+    espresso = '3.0.1'
+}
+
 buildscript {
+    ext {
+        kotlin_version = '1.2.31'
+        build_gradle = '3.1.0'
+    }
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath Dependencies.buildGradle
-        classpath Dependencies.kotlinGradlePlugin
+        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
+apply plugin: 'kotlin'
 
 allprojects {
     repositories {
@@ -22,6 +52,19 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+repositories {
+    mavenCentral()
+}
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }

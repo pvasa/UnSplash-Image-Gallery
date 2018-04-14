@@ -6,13 +6,13 @@ android {
     dataBinding {
         enabled = true
     }
-    compileSdkVersion Versions.compileSdk
+    compileSdkVersion rootProject.compile_sdk
     defaultConfig {
         applicationId "com.pvryan.mobilecodingchallenge"
-        minSdkVersion Versions.minSdk
-        targetSdkVersion Versions.targetSdk
-        versionCode Versions.vCode
-        versionName Versions.vName
+        minSdkVersion rootProject.min_sdk
+        targetSdkVersion rootProject.target_sdk
+        versionCode rootProject.ver_code
+        versionName rootProject.ver_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -33,20 +33,24 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation Dependencies.kotlinStdlib
-    implementation Dependencies.appcompatV7
-    implementation Dependencies.supportDesign
-    implementation Dependencies.recyclerview
-    implementation Dependencies.lifecycleExtensions
-    implementation Dependencies.retrofit
-    implementation Dependencies.converterGson
-    implementation Dependencies.glide
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${rootProject.kotlin}"
+    implementation "com.android.support:appcompat-v7:${rootProject.support}"
+    implementation "com.android.support:design:${rootProject.support}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.support}"
+    implementation "android.arch.lifecycle:extensions:${rootProject.lifecycle_extensions}"
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${rootProject.retrofit}"
+    implementation "com.github.bumptech.glide:glide:${rootProject.glide}"
+    implementation "com.andkulikov:transitionseverywhere:${rootProject.transitions_everywhere}"
+    // Room (use 1.1.0-alpha3 for latest alpha)
+    implementation "android.arch.persistence.room:runtime:1.0.0"
 
-    annotationProcessor Dependencies.lifecycleCompiler
-    annotationProcessor Dependencies.glideCompiler
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    annotationProcessor "android.arch.lifecycle:compiler:${rootProject.lifecycle_extensions}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.glide}"
 
-    testImplementation TestDependencies.junit
+    testImplementation "junit:junit:${rootProject.junit}"
 
-    androidTestImplementation AndroidTestDependencies.runner
-    androidTestImplementation AndroidTestDependencies.espresso
+    androidTestImplementation "com.android.support.test:runner:${rootProject.runner}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.espresso}"
 }

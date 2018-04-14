@@ -23,6 +23,16 @@ object Constants {
     const val defaultPage = 1
     const val imagesPerPage = 30
     const val defaultPosition = 0
+    const val defaultOrder = "latest"
+
+    // Unsplash endpoints
+    object EndPoints {
+        const val photos = "photos"
+    }
+
+    object RequestCodes {
+        const val viewPagerActivity = 0
+    }
 
     // Unsplash query params
     object Params {
@@ -38,11 +48,6 @@ object Constants {
         const val position = "position"
     }
 
-    // Request and response codes
-    object Codes {
-        const val expandedImageActivity = 1
-    }
-
     object Warnings {
         const val singleObserverNotified =
                 "Multiple observers registered but only one will be notified of changes."
@@ -54,5 +59,8 @@ object Constants {
         const val invalidImage = "Invalid image. Try again."
         const val unknownError = "Unknown error while fetching images. Try again."
         const val invalidMessageType = "Data-type of message parameter is invalid."
+        const val illegalAccessErrorRemoteSaves = "Saving to remote data source is not allowed. Use local instead."
+        const val illegalAccessErrorRemoteLoads = "Loading from remote data source is not allowed. Use local instead."
+        const val illegalAccessErrorLocalLoads = "Loading from local data source is not allowed. Use remote instead."
     }
 }
