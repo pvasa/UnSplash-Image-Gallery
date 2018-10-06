@@ -33,7 +33,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:${rootProject.kotlin}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${rootProject.kotlin}"
     implementation "com.android.support:appcompat-v7:${rootProject.support}"
     implementation "com.android.support:design:${rootProject.support}"
     implementation "com.android.support:recyclerview-v7:${rootProject.support}"
@@ -43,9 +43,9 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:${rootProject.glide}"
     implementation "com.andkulikov:transitionseverywhere:${rootProject.transitions_everywhere}"
     // Room (use 1.1.0-alpha3 for latest alpha)
-    implementation "android.arch.persistence.room:runtime:1.0.0"
+    implementation "android.arch.persistence.room:runtime:${rootProject.room}"
 
-    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:${rootProject.room}"
     annotationProcessor "android.arch.lifecycle:compiler:${rootProject.lifecycle_extensions}"
     annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.glide}"
 

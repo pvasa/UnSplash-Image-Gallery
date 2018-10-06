@@ -4,18 +4,18 @@ ext {
     // App and SDK versions
     ver_code = 101
     ver_name = '1.0.1'
-    compile_sdk = 27
+    compile_sdk = 28
     min_sdk = 16
-    target_sdk = 27
+    target_sdk = 28
     lifecycle_extensions = '1.1.1'
 
     // Dependency versions
-    kotlin = '1.2.31'
-    support = '27.1.1'
+    kotlin = '1.2.71'
+    support = '28.0.0'
     retrofit = '2.3.0'
-    glide = '4.6.1'
+    glide = '4.7.1'
     transitions_everywhere = '1.7.8'
-    room = '1.0.0'
+    room = '1.1.1'
 
     // Test dependency versions
     junit = '4.12'
@@ -27,15 +27,14 @@ ext {
 
 buildscript {
     ext {
-        kotlin_version = '1.2.31'
-        build_gradle = '3.1.0'
+        kotlin_version = '1.2.71'
     }
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.1'
+        classpath 'com.android.tools.build:gradle:3.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
