@@ -15,20 +15,24 @@
 package com.pvryan.mobilecodingchallenge.galleryGrid
 
 import android.net.Uri
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.data.models.Image
-import kotlinx.android.synthetic.main.item_image.view.*
+import kotlinx.android.synthetic.main.item_image.view.ivImage
 
 @Suppress("MemberVisibilityCanBePrivate")
 // Adapter for recycler view showing images in grid layout
-class GalleryGridAdapter(private val images: ArrayList<Image>,
-                         private val userActionListener: ImageItemUserActionListener) :
-        RecyclerView.Adapter<GalleryGridAdapter.GalleryViewHolder>() {
+class GalleryGridAdapter(
+        private val images: ArrayList<Image>,
+        private val userActionListener: ImageItemUserActionListener
+) : RecyclerView.Adapter<GalleryGridAdapter.GalleryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -45,15 +49,25 @@ class GalleryGridAdapter(private val images: ArrayList<Image>,
     override fun getItemCount(): Int = images.size
 
     // View holder of each image
-    class GalleryViewHolder(itemView: View,
-                            private val userActionListener: ImageItemUserActionListener) :
-            RecyclerView.ViewHolder(itemView) {
+    class GalleryViewHolder(
+            itemView: View,
+            private val userActionListener: ImageItemUserActionListener
+    ) : RecyclerView.ViewHolder(itemView) {
 
         fun bindImage(image: Image, position: Int) {
+            val circularProgressDrawable = CircularProgressDrawable(itemView.context).apply {
+                setStyle(CircularProgressDrawable.DEFAULT)
+                strokeWidth = 2f
+                centerRadius = 6f
+                start()
+            }
             // Load image with thumb quality
             Glide.with(itemView.context)
-                    .asBitmap()
                     .load(Uri.parse(image.urls.thumb))
+                    .apply(RequestOptions()
+                            .placeholder(circularProgressDrawable)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    )
                     .into(itemView.ivImage)
             itemView.setOnClickListener { userActionListener.onImageClick(position) }
         }

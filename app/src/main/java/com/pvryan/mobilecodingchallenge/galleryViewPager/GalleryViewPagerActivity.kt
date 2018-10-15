@@ -15,48 +15,24 @@
 package com.pvryan.mobilecodingchallenge.galleryViewPager
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
-import com.pvryan.mobilecodingchallenge.extensions.obtainViewModel
-import com.pvryan.mobilecodingchallenge.galleryGrid.GalleryViewModel
-import kotlinx.android.synthetic.main.activity_gallery_view_pager.*
 
 class GalleryViewPagerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_gallery_view_pager)
-        setSupportActionBar(toolbarViewPager)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        if (savedInstanceState != null) {
-            supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.container,
-                            GalleryViewPagerFragment.newInstance(intent.extras))
-                    ?.commit()
-        }
+
+        val position = savedInstanceState?.getInt(Constants.Keys.position)
+                ?: intent.extras?.getInt(Constants.Keys.position)
+                ?: Constants.defaultPosition
+
+        supportFragmentManager
+                ?.beginTransaction()
+                ?.replace(R.id.container, GalleryViewPagerFragment.newInstance(position))
+                ?.commit()
     }
-
-    /*private fun setupViewModel() {
-        if (!isNetworkAvailable()) {
-            container.snackIndefinite(Constants.Errors.noNetwork,
-                    R.string.text_try_again, View.OnClickListener {
-                setupViewModel()
-            })
-            return
-        }
-        viewModel = obtainViewModel().apply {
-            fullScreen.observe( this@GalleryViewPagerActivity,
-                    Observer<Boolean> {
-                        if (it == true) {
-                            supportActionBar?.hide()
-                            hideStatusBar()
-                        } else {
-                            showStatusBar()
-                            supportActionBar?.show()
-                        }
-                    })
-        }
-    }*/
-
-    fun obtainViewModel() = obtainViewModel(GalleryViewModel::class.java)
 }

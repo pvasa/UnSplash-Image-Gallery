@@ -7,15 +7,21 @@ ext {
     compile_sdk = 28
     min_sdk = 16
     target_sdk = 28
-    lifecycle_extensions = '1.1.1'
+    lifecycle_extensions = '2.0.0'
 
     // Dependency versions
     kotlin = '1.2.71'
-    support = '28.0.0'
+    coroutines = '0.30.2'
+    coroutinesRetrofitAdapter = '1.0.0'
+    supportX = '1.0.0'
     retrofit = '2.3.0'
-    glide = '4.7.1'
+    constraintLayout = '1.1.2'
+    glide = '4.8.0'
+    photoView = '2.2.0'
     transitions_everywhere = '1.7.8'
     room = '1.1.1'
+    timber = '4.7.1'
+    koin = '1.0.1'
 
     // Test dependency versions
     junit = '4.12'
@@ -28,13 +34,14 @@ ext {
 buildscript {
     ext {
         kotlin_version = '1.2.71'
+        build_gradle = '3.1.0'
     }
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -48,22 +55,5 @@ allprojects {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-}
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-}
-compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = '1.8'
     }
 }

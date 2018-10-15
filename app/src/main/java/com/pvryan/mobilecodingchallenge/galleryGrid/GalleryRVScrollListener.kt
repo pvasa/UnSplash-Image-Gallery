@@ -14,17 +14,15 @@
  */
 package com.pvryan.mobilecodingchallenge.galleryGrid
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-class GalleryRVScrollListener(private val postLastVisiblePosition: (pos: Int) -> Unit) :
-        RecyclerView.OnScrollListener() {
+class GalleryRVScrollListener(
+        private val postLastVisiblePosition: (pos: Int) -> Unit
+) : RecyclerView.OnScrollListener() {
 
-    override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-        super.onScrolled(recyclerView, dx, dy)
-
-        val layoutManager: RecyclerView.LayoutManager? = recyclerView?.layoutManager
-
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        val layoutManager: RecyclerView.LayoutManager? = recyclerView.layoutManager
         when (layoutManager) {
             is GridLayoutManager -> {
                 postLastVisiblePosition(layoutManager.findLastCompletelyVisibleItemPosition())

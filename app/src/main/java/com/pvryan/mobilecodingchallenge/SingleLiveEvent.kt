@@ -15,12 +15,11 @@
  */
 package com.pvryan.mobilecodingchallenge
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.support.annotation.MainThread
-import android.util.Log
-
+import androidx.annotation.MainThread
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -38,10 +37,10 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     private val pending = AtomicBoolean(false)
 
     @MainThread
-    override fun observe(owner: LifecycleOwner, observer: Observer<T>) {
+    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
 
         if (hasActiveObservers()) {
-            Log.w(TAG, Constants.Warnings.singleObserverNotified)
+            Timber.w(Constants.Warnings.singleObserverNotified)
         }
 
         // Observe the internal MutableLiveData
@@ -64,9 +63,5 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     @MainThread
     fun call() {
         value = null
-    }
-
-    companion object {
-        private const val TAG = "SingleLiveEvent"
     }
 }

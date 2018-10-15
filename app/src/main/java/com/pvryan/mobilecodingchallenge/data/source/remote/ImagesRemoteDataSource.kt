@@ -14,16 +14,23 @@
  */
 package com.pvryan.mobilecodingchallenge.data.source.remote
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import com.pvryan.mobilecodingchallenge.data.source.ImagesDataSource
-import retrofit2.Call
-import retrofit2.Callback
+import kotlinx.coroutines.experimental.Deferred
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ImagesRemoteDataSource : ImagesDataSource {
+
+    private val apis: ImagesDataSource.Apis = Retrofit.Builder()
+            .baseUrl(Constants.baseURLUnsplash)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .build()
+            .create(ImagesDataSource.Apis::class.java)
 
     @Throws(IllegalAccessError::class)
     override fun saveImages(images: ArrayList<Image>) {
@@ -31,42 +38,6 @@ class ImagesRemoteDataSource : ImagesDataSource {
         throw IllegalAccessError(Constants.Errors.illegalAccessErrorRemoteSaves)
     }
 
-    @Throws(IllegalAccessError::class)
-    override fun loadImages(): ArrayList<Image> {
-        // Only used for local loads
-        throw IllegalAccessError(Constants.Errors.illegalAccessErrorLocalLoads)
-    }
-
-    override fun loadImages(callback: ImagesDataSource.LoadImagesCallback,
-                            page: Int, imagesPerPage: Int) {
-
-        val retrofitCalls = Retrofit.Builder()
-                .baseUrl(Constants.baseURLUnsplash)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build().create(ImagesDataSource.RetrofitCalls::class.java)
-                as ImagesDataSource.RetrofitCalls
-
-        retrofitCalls.getUnsplashImagesCall(Constants.appIdUnsplash, page, imagesPerPage)
-                .enqueue(object : Callback<List<Image>> {
-
-            override fun onFailure(call: Call<List<Image>>?, t: Throwable?) {
-                callback.onFailure(t)
-            }
-
-            override fun onResponse(call: Call<List<Image>>?,
-                                    response: Response<List<Image>>) {
-                when {
-                    response.body() != null ->
-                        callback.onImagesLoaded(response.body() as ArrayList<Image>)
-                    response.errorBody() != null ->
-                        onFailure(call, Throwable(response.errorBody()?.string()))
-                    else -> onFailure(call, Throwable(Constants.Errors.unknownError))
-                }
-
-                response.headers()?.let {
-                    callback.onTotalImagesAvailable(it.get("X-Total")?.toInt() ?: 0)
-                }
-            }
-        })
-    }
+    override fun loadImages(page: Int, imagesPerPage: Int): Deferred<Response<List<Image>>> =
+            apis.getUnsplashImages(Constants.appIdUnsplash, page, imagesPerPage)
 }

@@ -13,7 +13,7 @@ android {
         targetSdkVersion rootProject.target_sdk
         versionCode rootProject.ver_code
         versionName rootProject.ver_name
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
@@ -33,24 +33,56 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${rootProject.kotlin}"
-    implementation "com.android.support:appcompat-v7:${rootProject.support}"
-    implementation "com.android.support:design:${rootProject.support}"
-    implementation "com.android.support:recyclerview-v7:${rootProject.support}"
-    implementation "android.arch.lifecycle:extensions:${rootProject.lifecycle_extensions}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${rootProject.coroutines}"
+
+
+    implementation "androidx.appcompat:appcompat:${rootProject.supportX}"
+    implementation "com.google.android.material:material:${rootProject.supportX}"
+    implementation "androidx.recyclerview:recyclerview:${rootProject.supportX}"
+
+    implementation "androidx.lifecycle:lifecycle-extensions:${rootProject.lifecycle_extensions}"
+
     implementation "com.squareup.retrofit2:retrofit:${rootProject.retrofit}"
     implementation "com.squareup.retrofit2:converter-gson:${rootProject.retrofit}"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-experimental-adapter:${rootProject.coroutinesRetrofitAdapter}"
+
     implementation "com.github.bumptech.glide:glide:${rootProject.glide}"
+
+    implementation "com.github.chrisbanes:PhotoView:${rootProject.photoView}"
+
     implementation "com.andkulikov:transitionseverywhere:${rootProject.transitions_everywhere}"
     // Room (use 1.1.0-alpha3 for latest alpha)
-    implementation "android.arch.persistence.room:runtime:${rootProject.room}"
 
-    annotationProcessor "android.arch.persistence.room:compiler:${rootProject.room}"
-    annotationProcessor "android.arch.lifecycle:compiler:${rootProject.lifecycle_extensions}"
-    annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.glide}"
+    implementation 'androidx.room:room-runtime:2.1.0-alpha01'
+
+    implementation "com.jakewharton.timber:timber:${rootProject.timber}"
+
+    implementation "com.android.support.constraint:constraint-layout:${rootProject.constraintLayout}"
+
+    // AndroidX (based on koin-android)
+    // Koin AndroidX Scope feature
+    implementation "org.koin:koin-androidx-scope:${rootProject.koin}"
+    // Koin AndroidX ViewModel feature
+    implementation "org.koin:koin-androidx-viewmodel:${rootProject.koin}"
+
+    kapt 'androidx.room:room-compiler:2.1.0-alpha01'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    kapt "com.github.bumptech.glide:compiler:${rootProject.glide}"
 
     testImplementation "junit:junit:${rootProject.junit}"
 
-    androidTestImplementation "com.android.support.test:runner:${rootProject.runner}"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.espresso}"
+    androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta02'
+}
+
+androidExtensions {
+    experimental = true
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }

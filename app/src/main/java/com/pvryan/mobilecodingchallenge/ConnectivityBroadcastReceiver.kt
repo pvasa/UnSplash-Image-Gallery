@@ -20,8 +20,8 @@ import android.content.Intent
 import android.net.ConnectivityManager
 
 class ConnectivityBroadcastReceiver(
-        private val connectivityListener: ConnectivityListener) :
-        BroadcastReceiver() {
+        private val connectivityListener: ConnectivityListener
+) : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action == ConnectivityManager.CONNECTIVITY_ACTION)

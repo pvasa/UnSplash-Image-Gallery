@@ -18,33 +18,71 @@ import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import com.pvryan.mobilecodingchallenge.data.source.local.ImagesLocalDataSource
 import com.pvryan.mobilecodingchallenge.data.source.remote.ImagesRemoteDataSource
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.launch
+import retrofit2.HttpException
 
-class ImagesRepository : ImagesDataSource {
+class ImagesRepository {
 
     private val local = ImagesLocalDataSource()
     private val remote = ImagesRemoteDataSource()
 
-    @Throws(IllegalAccessError::class)
-    override fun loadImages(): ArrayList<Image> {
-        // Only used for local loads
-        throw IllegalAccessError(Constants.Errors.illegalAccessErrorLocalLoads)
+    fun loadImages(
+            page: Int,
+            imagesPerPage: Int,
+            success: (images: ArrayList<Image>, totalAvailable: Int) -> Unit,
+            failure: (t: Throwable) -> Unit
+    ) {
+        GlobalScope.launch {
+
+            val localResponse = local.loadImages(page, imagesPerPage).await()
+
+            if (localResponse.isSuccessful) {
+
+                val images = localResponse.body() as? ArrayList<Image>
+
+                if (images?.isNotEmpty() == true) {
+
+                    val totalAvailable = localResponse.headers()
+                            ?.get(Constants.Headers.xTotal)
+                            ?.toIntOrNull() ?: images.size
+
+                    GlobalScope.launch(Dispatchers.Main) { success(images, totalAvailable) }
+                    return@launch
+                }
+            }
+
+            val remoteResponse = remote.loadImages(page, imagesPerPage).await()
+
+            GlobalScope.launch(Dispatchers.Main) {
+
+                if (remoteResponse.isSuccessful) {
+
+                    val images = remoteResponse.body() as? ArrayList<Image>
+                            ?: run {
+                                failure(Throwable(Constants.Errors.unknownError))
+                                return@launch
+                            }
+
+                    local.saveImages(images)
+
+                    val totalAvailable = remoteResponse.headers()
+                            ?.get(Constants.Headers.xTotal)
+                            ?.toIntOrNull() ?: images.size
+
+                    success(images, totalAvailable)
+
+                } else failure(HttpException(remoteResponse))
+            }
+        }
     }
 
-    override fun loadImages(callback: ImagesDataSource.LoadImagesCallback,
-                            page: Int, imagesPerPage: Int) {
-        if (page == Constants.defaultPage) {
-            val images = local.loadImages()
-            if (images.isEmpty())
-                remote.loadImages(callback)
-            else callback.onImagesLoaded(images)
-        } else remote.loadImages(callback, page)
-    }
-
-    override fun saveImages(images: ArrayList<Image>) {
+    fun saveImages(images: ArrayList<Image>) {
         local.saveImages(images)
         try {
             remote.saveImages(images)
-        } catch (e: IllegalAccessError) { /*Ignored intentionally*/
+        } catch (ignored: IllegalAccessError) { // Ignored intentionally
         }
     }
 }

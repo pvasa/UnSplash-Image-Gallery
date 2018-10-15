@@ -1,12 +1,16 @@
 <resources>
     <string name="app_name">MobileCodingChallenge</string>
     <string name="app_title">Images\ from\ Unsplash</string>
+
     <string name="desc_item_image">Item image</string>
     <string name="desc_expanded_image">Expanded image</string>
     <string name="desc_back_button">Back button</string>
+    <string name="desc_close_button">Close button</string>
+    <string name="desc_info_button">Image information button</string>
 
     <string name="tv_resolution">"%d\ x\ %d</string>
+
     <string name="text_try_again">Try\ again</string>
     <string name="text_dismiss">Dismiss</string>
-    <string name="desc_info_button">Image information button</string>
+    <string name="text_description_placeholder">Image %d</string>
 </resources>

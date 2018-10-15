@@ -16,10 +16,21 @@ package com.pvryan.mobilecodingchallenge
 
 import android.app.Application
 import com.bumptech.glide.request.target.ViewTarget
+import com.pvryan.mobilecodingchallenge.data.source.imagesRepositoryDiModule
+import org.koin.android.ext.android.startKoin
 
 class App : Application() {
+
     override fun onCreate() {
         super.onCreate()
+
         ViewTarget.setTagId(R.id.glide_tag)
+
+        val modules = listOf(
+                imagesRepositoryDiModule,
+                galleryDiModule
+        )
+        // Start Koin
+        startKoin(this, modules)
     }
 }

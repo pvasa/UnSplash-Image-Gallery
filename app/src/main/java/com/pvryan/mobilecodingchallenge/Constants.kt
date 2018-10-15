@@ -42,6 +42,10 @@ object Constants {
         const val orderBy = "order_by"
     }
 
+    object Headers {
+        const val xTotal = "X-Total"
+    }
+
     // Keys for saving and passing data
     object Keys {
         const val expandedImage = "expandedImage"
@@ -49,8 +53,7 @@ object Constants {
     }
 
     object Warnings {
-        const val singleObserverNotified =
-                "Multiple observers registered but only one will be notified of changes."
+        const val singleObserverNotified = "Multiple observers registered but only one will be notified of changes."
     }
 
     // Error messages

@@ -14,34 +14,57 @@
  */
 package com.pvryan.mobilecodingchallenge.galleryViewPager
 
-import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import com.pvryan.mobilecodingchallenge.Constants
+import android.net.Uri
+import android.view.View
+import android.view.ViewGroup
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import androidx.viewpager.widget.PagerAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.github.chrisbanes.photoview.PhotoView
 import com.pvryan.mobilecodingchallenge.data.models.Image
-import java.util.*
+import java.util.ArrayList
 
 @Suppress("MemberVisibilityCanBePrivate")
 // Adapter for view pager in expanded image layout
-class GalleryViewPagerAdapter(private val images: ArrayList<Image>,
-                              fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+class GalleryViewPagerAdapter(
+        private val images: ArrayList<Image>
+) : PagerAdapter() {
 
-    // Return a new fragment for image at current position
-    override fun getItem(position: Int): Fragment {
-        val fragment = ExpandedImageFragment.newInstance()
-        val args = Bundle()
-        args.putParcelable(Constants.Keys.expandedImage, images[position])
-        fragment.arguments = args
-        return fragment
+    // Return a new ImageView for image at current position
+    override fun instantiateItem(container: ViewGroup, position: Int): PhotoView = PhotoView(container.context)
+            .apply {
+                layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                container.addView(this)
+                val circularProgressDrawable = CircularProgressDrawable(context).apply {
+                    setStyle(CircularProgressDrawable.DEFAULT)
+                    strokeWidth = 2f
+                    centerRadius = 16f
+                    start()
+                }
+                Glide.with(context)
+                        .load(Uri.parse(images[position].urls.full))
+                        .apply(RequestOptions()
+                                .placeholder(circularProgressDrawable)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        )
+                        .into(this)
+            }
+
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+        container.removeView(`object` as? PhotoView)
     }
+
+    override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object` as? PhotoView
 
     // Return total number of images
     override fun getCount(): Int = images.size
 
     // Return page title (publisher's name) for each image/page
-    override fun getPageTitle(position: Int): CharSequence? {
-        val image = images[position]
-        return "${image.user.name} (${image.width} x ${image.height})"
-    }
+    override fun getPageTitle(position: Int): CharSequence? =
+            images[position].run { "${user.name} ($width x $height)" }
 }

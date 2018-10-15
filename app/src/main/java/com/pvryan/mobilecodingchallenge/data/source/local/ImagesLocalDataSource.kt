@@ -17,21 +17,43 @@ package com.pvryan.mobilecodingchallenge.data.source.local
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import com.pvryan.mobilecodingchallenge.data.source.ImagesDataSource
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.async
+import okhttp3.Headers
+import retrofit2.Response
 
 class ImagesLocalDataSource : ImagesDataSource {
 
     private val images = ArrayList<Image>()
 
     override fun saveImages(images: ArrayList<Image>) {
-        images.addAll(images)
+        this.images.addAll(images)
     }
 
-    override fun loadImages(): ArrayList<Image> = images
+    override fun loadImages(
+            page: Int,
+            imagesPerPage: Int
+    ): Deferred<Response<List<Image>>> = GlobalScope.async {
 
-    @Throws(IllegalAccessError::class)
-    override fun loadImages(callback: ImagesDataSource.LoadImagesCallback,
-                            page: Int, imagesPerPage: Int) {
-        // Only used for remote loads
-        throw IllegalAccessError(Constants.Errors.illegalAccessErrorRemoteLoads)
+        /*val (firstIndex, lastIndex) = when {
+
+            page <= images.size / imagesPerPage ->
+                Pair((page * imagesPerPage) - imagesPerPage - 1, (page * imagesPerPage) - 1)
+
+            else -> Pair(0, -1)
+        }
+
+        val requestedImages: List<Image> =
+                if (firstIndex > lastIndex) emptyList()
+                else ArrayList(images.subList(firstIndex, lastIndex + 1))
+
+        val headerXTotal = Pair(
+                Constants.Headers.xTotal,
+                (if (requestedImages.isNotEmpty()) images.size else 0).toString()
+        )
+
+        Response.success(requestedImages, Headers.of(mapOf(headerXTotal)))*/
+        Response.success(emptyList<Image>(), Headers.of(mapOf(Pair(Constants.Headers.xTotal, 0.toString()))))
     }
 }

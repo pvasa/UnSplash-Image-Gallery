@@ -15,17 +15,15 @@
 package com.pvryan.mobilecodingchallenge.extensions
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 
 // Return current screen orientation
-fun AppCompatActivity.getOrientation() = this.resources.configuration.orientation
+val AppCompatActivity.orientation: Int get() = this.resources.configuration.orientation
 
 // Check if internet connection is available
 fun AppCompatActivity.isNetworkAvailable(): Boolean {
@@ -36,12 +34,13 @@ fun AppCompatActivity.isNetworkAvailable(): Boolean {
 
 @SuppressLint("ObsoleteSdkInt")
 fun AppCompatActivity.hideStatusBar() {
-    if (Build.VERSION.SDK_INT < 16)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN)
-    else {
-        val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
-        window.decorView.systemUiVisibility = uiOptions
+    if (Build.VERSION.SDK_INT < 16) {
+        window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+    } else {
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
     }
 }
 
@@ -55,6 +54,3 @@ fun AppCompatActivity.showStatusBar() {
         window.decorView.systemUiVisibility = uiOptions
     }
 }
-
-fun <T : ViewModel> AppCompatActivity.obtainViewModel(viewModelClass: Class<T>) =
-        ViewModelProviders.of(this).get(viewModelClass)

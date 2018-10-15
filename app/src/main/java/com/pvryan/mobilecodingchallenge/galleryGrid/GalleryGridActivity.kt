@@ -14,34 +14,44 @@
  */
 package com.pvryan.mobilecodingchallenge.galleryGrid
 
-import android.arch.lifecycle.Observer
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.pvryan.mobilecodingchallenge.ConnectivityBroadcastReceiver
 import com.pvryan.mobilecodingchallenge.ConnectivityListener
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
-import com.pvryan.mobilecodingchallenge.extensions.*
-import kotlinx.android.synthetic.main.activity_gallery_grid.*
+import com.pvryan.mobilecodingchallenge.extensions.isNetworkAvailable
+import com.pvryan.mobilecodingchallenge.extensions.snackIndefinite
+import kotlinx.android.synthetic.main.activity_gallery_grid.container
+import kotlinx.android.synthetic.main.activity_gallery_grid.toolbarGrid
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 // Activity for showing images from Unsplash
 class GalleryGridActivity : AppCompatActivity(), ConnectivityListener {
 
-    private lateinit var viewModel: GalleryViewModel
+    private val viewModel by viewModel<GalleryViewModel>()
 
     private val receiver = ConnectivityBroadcastReceiver(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_gallery_grid)
+
         setSupportActionBar(toolbarGrid)
+
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, GalleryGridFragment.newInstance(),
-                            GalleryGridFragment.tag).commit()
+            supportFragmentManager
+                    .beginTransaction()
+                    .replace(
+                            R.id.container,
+                            GalleryGridFragment.newInstance(),
+                            GalleryGridFragment.tag
+                    )
+                    .commit()
         }
     }
 
@@ -55,8 +65,8 @@ class GalleryGridActivity : AppCompatActivity(), ConnectivityListener {
     }
 
     override fun onPause() {
-        super.onPause()
         unregisterReceiver(receiver)
+        super.onPause()
     }
 
     /*override fun onBackPressed() {
@@ -99,26 +109,14 @@ class GalleryGridActivity : AppCompatActivity(), ConnectivityListener {
     }*/
 
     private fun setupViewModel() {
+
         if (!isNetworkAvailable()) {
-            container.snackIndefinite(Constants.Errors.noNetwork,
-                    R.string.text_try_again, View.OnClickListener {
-                setupViewModel()
-            })
+            container.snackIndefinite(
+                    Constants.Errors.noNetwork,
+                    R.string.text_try_again,
+                    View.OnClickListener { setupViewModel() }
+            )
             return
         }
-        viewModel = obtainViewModel().apply {
-            fullScreen.observe(this@GalleryGridActivity,
-                    Observer<Boolean> {
-                        if (it == true) {
-                            supportActionBar?.hide()
-                            hideStatusBar()
-                        } else {
-                            showStatusBar()
-                            supportActionBar?.show()
-                        }
-                    })
-        }
     }
-
-    fun obtainViewModel() = obtainViewModel(GalleryViewModel::class.java)
 }

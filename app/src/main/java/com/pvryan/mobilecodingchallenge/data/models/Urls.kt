@@ -14,36 +14,16 @@
  */
 package com.pvryan.mobilecodingchallenge.data.models
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-@Suppress("MemberVisibilityCanBePrivate")
 // Urls model for multi size images
-data class Urls(val raw: String,
-                val full: String,
-                val regular: String,
-                val small: String,
-                val thumb: String) : Parcelable {
-
-    constructor(parcel: Parcel) : this(
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString())
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(raw)
-        parcel.writeString(full)
-        parcel.writeString(regular)
-        parcel.writeString(small)
-        parcel.writeString(thumb)
-    }
-
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<Urls> {
-        override fun createFromParcel(parcel: Parcel): Urls = Urls(parcel)
-        override fun newArray(size: Int): Array<Urls?> = arrayOfNulls(size)
-    }
-}
+@Suppress("MemberVisibilityCanBePrivate")
+@Parcelize
+data class Urls(
+        val raw: String,
+        val full: String,
+        val regular: String,
+        val small: String,
+        val thumb: String
+) : Parcelable

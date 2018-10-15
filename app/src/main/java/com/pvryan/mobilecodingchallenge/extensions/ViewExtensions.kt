@@ -17,8 +17,8 @@
 // Extensions functions for View class
 package com.pvryan.mobilecodingchallenge.extensions
 
-import android.support.design.widget.Snackbar
 import android.view.View
+import com.google.android.material.snackbar.Snackbar
 import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.R
 
