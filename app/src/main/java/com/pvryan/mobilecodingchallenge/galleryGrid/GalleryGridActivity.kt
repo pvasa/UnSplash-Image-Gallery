@@ -57,9 +57,6 @@ class GalleryGridActivity : AppCompatActivity(), ConnectivityListener {
 
     override fun onResume() {
         super.onResume()
-        /*supportFragmentManager?.addOnBackStackChangedListener {
-            setupActionBarAndLayoutBehaviour()
-        }*/
         setupViewModel()
         registerReceiver(receiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
     }
@@ -69,44 +66,9 @@ class GalleryGridActivity : AppCompatActivity(), ConnectivityListener {
         super.onPause()
     }
 
-    /*override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount == 0)
-            super.onBackPressed()
-        else onSupportNavigateUp()
-    }*/
-
-    /*override fun onSupportNavigateUp(): Boolean {
-        supportFragmentManager.findFragmentByTag(GalleryViewPagerFragment.tag)?.let {
-            if (it is GalleryViewPagerFragment)
-                viewModel.viewPagerPosition.value = it.pager.currentItem
-        }
-        viewModel.fullScreen.value = false
-        return supportFragmentManager.popBackStack().run { true }
-    }*/
-
     override fun onConnectivityStatusChanged() {
         viewModel.networkAvailable.value = isNetworkAvailable()
     }
-
-    /*override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        setupActionBarAndLayoutBehaviour()
-    }*/
-
-    /*private fun setupActionBarAndLayoutBehaviour() {
-        with(supportFragmentManager.backStackEntryCount > 0) {
-            if (this) {
-                (container.layoutParams as CoordinatorLayout.LayoutParams).behavior = null
-                toolbarTitle.gone()
-            } else {
-                (container.layoutParams as CoordinatorLayout.LayoutParams)
-                        .behavior = AppBarLayout.ScrollingViewBehavior()
-                supportActionBar?.title = ""
-                toolbarTitle.show()
-            }
-            supportActionBar?.setDisplayHomeAsUpEnabled(this)
-        }
-    }*/
 
     private fun setupViewModel() {
 
@@ -116,7 +78,6 @@ class GalleryGridActivity : AppCompatActivity(), ConnectivityListener {
                     R.string.text_try_again,
                     View.OnClickListener { setupViewModel() }
             )
-            return
         }
     }
 }

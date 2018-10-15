@@ -33,7 +33,7 @@ class GalleryViewPagerFragment : Fragment() {
 
     private val viewModel by sharedViewModel<GalleryViewModel>()
 
-    private val imagesCallback by lazy {
+    private val imagesObserver by lazy {
 
         object : ObservableList.OnListChangedCallback<ObservableList<Image>>() {
 
@@ -55,11 +55,11 @@ class GalleryViewPagerFragment : Fragment() {
         }
     }
 
-    private val networkAvailableCallback by lazy {
+    private val networkAvailableObserver by lazy {
         Observer<Boolean> { if (it == false) viewModel.snackbarMessage.value = Constants.Errors.noNetwork }
     }
 
-    private val fullScreenCallback by lazy {
+    private val fullScreenObserver by lazy {
         Observer<Boolean> {
             TransitionManager.beginDelayedTransition(flViewPager as ViewGroup)
             if (it == true) {
@@ -114,11 +114,11 @@ class GalleryViewPagerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         setupViewPager()
-        viewModel.images.addOnListChangedCallback(imagesCallback)
+        viewModel.images.addOnListChangedCallback(imagesObserver)
     }
 
     override fun onPause() {
-        viewModel.images.removeOnListChangedCallback(imagesCallback)
+        viewModel.images.removeOnListChangedCallback(imagesObserver)
         pager.removeOnPageChangeListener(onPageChangeListener)
         super.onPause()
     }
@@ -136,8 +136,8 @@ class GalleryViewPagerFragment : Fragment() {
     private fun setupViewModel() {
         viewModel.apply {
             loadImageUrls(Constants.defaultPage)
-            networkAvailable.observe(this@GalleryViewPagerFragment, networkAvailableCallback)
-            fullScreen.observe(this@GalleryViewPagerFragment, fullScreenCallback)
+            networkAvailable.observe(this@GalleryViewPagerFragment, networkAvailableObserver)
+            fullScreen.observe(this@GalleryViewPagerFragment, fullScreenObserver)
             snackbarMessage.observe(this@GalleryViewPagerFragment, snackbarMessageObserver)
         }
     }

@@ -24,7 +24,7 @@ class GalleryGridFragment : Fragment() {
 
     private val viewModel by sharedViewModel<GalleryViewModel>()
 
-    private val imagesCallback by lazy {
+    private val imagesObserver by lazy {
 
         object : ObservableList.OnListChangedCallback<ObservableList<Image>>() {
 
@@ -50,7 +50,7 @@ class GalleryGridFragment : Fragment() {
         }
     }
 
-    private val lastVisiblePositionCallback by lazy {
+    private val lastVisiblePositionObserver by lazy {
         Observer<Int> {
             if (it == viewModel.images.size - 1) {
                 viewModel.loadImageUrls((viewModel.images.size / Constants.imagesPerPage) + 1)
@@ -58,15 +58,15 @@ class GalleryGridFragment : Fragment() {
         }
     }
 
-    private val viewPagerPositionCallback by lazy {
+    private val viewPagerPositionObserver by lazy {
         Observer<Int> { rvImages.scrollToPosition(it ?: Constants.defaultPosition) }
     }
 
-    private val maxImagesAvailableCallback by lazy {
+    private val maxImagesAvailableObserver by lazy {
         Observer<Int> { if (viewModel.images.size == it) rvImages.clearOnScrollListeners() }
     }
 
-    private val networkAvailableCallback by lazy {
+    private val networkAvailableObserver by lazy {
         Observer<Boolean> {
             if (it == false) {
                 rvImages.clearOnScrollListeners()
@@ -84,11 +84,6 @@ class GalleryGridFragment : Fragment() {
     private val imageItemUserActionListener = object : ImageItemUserActionListener {
 
         override fun onImageClick(position: Int) {
-            /*val galleryPagerFragment = GalleryViewPagerFragment.newInstance(args)
-            activity?.supportFragmentManager?.beginTransaction()
-                    ?.add(R.id.container, galleryPagerFragment, GalleryViewPagerFragment.tag)
-                    ?.addToBackStack(GalleryViewPagerFragment.tag)
-                    ?.commit()*/
             Intent(context, GalleryViewPagerActivity::class.java)
                     .arguments { putInt(Constants.Keys.position, position) }
                     .also { startActivityForResult(it, Constants.RequestCodes.viewPagerActivity) }
@@ -121,12 +116,12 @@ class GalleryGridFragment : Fragment() {
 
         with(viewModel) {
 
-            images.addOnListChangedCallback(imagesCallback)
+            images.addOnListChangedCallback(imagesObserver)
 
-            lastVisiblePosition.observe(this@GalleryGridFragment, lastVisiblePositionCallback)
-            viewPagerPosition.observe(this@GalleryGridFragment, viewPagerPositionCallback)
-            maxImagesAvailable.observe(this@GalleryGridFragment, maxImagesAvailableCallback)
-            networkAvailable.observe(this@GalleryGridFragment, networkAvailableCallback)
+            lastVisiblePosition.observe(this@GalleryGridFragment, lastVisiblePositionObserver)
+            viewPagerPosition.observe(this@GalleryGridFragment, viewPagerPositionObserver)
+            maxImagesAvailable.observe(this@GalleryGridFragment, maxImagesAvailableObserver)
+            networkAvailable.observe(this@GalleryGridFragment, networkAvailableObserver)
             snackbarMessage.observe(this@GalleryGridFragment, snackbarMessageObserver)
             start()
         }
