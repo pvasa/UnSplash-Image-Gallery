@@ -14,6 +14,7 @@
  */
 package com.pvryan.mobilecodingchallenge.galleryGrid
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.net.Uri
@@ -28,16 +29,13 @@ import com.pvryan.mobilecodingchallenge.SingleLiveEvent
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import com.pvryan.mobilecodingchallenge.data.source.ImagesRepository
 
-class GalleryViewModel(
+class GalleryGridViewModel(
         context: Application,
         private val imagesRepository: ImagesRepository
 ) : AndroidViewModel(context) {
 
     val images = ObservableArrayList<Image>()
     val maxImagesAvailable = MutableLiveData<Int>()
-    val lastVisiblePosition = MutableLiveData<Int>()
-    val viewPagerPosition = MutableLiveData<Int>()
-    val fullScreen = MutableLiveData<Boolean>().apply { value = false }
     val snackbarMessage = SingleLiveEvent<Any>()
     val networkAvailable = MutableLiveData<Boolean>()
 
@@ -45,14 +43,13 @@ class GalleryViewModel(
         if (images.isEmpty()) loadImageUrls(Constants.defaultPage)
     }
 
-    fun loadImageUrls(page: Int, imagesPerPage: Int = Constants.imagesPerPage) {
+    private fun loadImageUrls(page: Int) {
 
         imagesRepository.loadImages(
                 page,
-                imagesPerPage,
+                Constants.imagesPerPage,
                 success = { images, totalAvailable ->
-                    imagesRepository.saveImages(images)
-                    this@GalleryViewModel.images.addAll(images)
+                    this@GalleryGridViewModel.images.addAll(images)
                     maxImagesAvailable.value = totalAvailable
                 },
                 failure = { t -> snackbarMessage.value = t.localizedMessage ?: Constants.Errors.unknownError }
@@ -62,12 +59,22 @@ class GalleryViewModel(
     fun preloadImages(context: Context, positionStart: Int) {
 
         for (i in positionStart until images.size) {
-            Glide.with(context)
-                    .load(Uri.parse(images[i].urls.thumb))
-                    .apply(RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    )
-                    .preload()
+
+            ((context as? Activity) ?: context).let {
+                Glide.with(it)
+                        .load(Uri.parse(images[i].urls.thumb))
+                        .apply(RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        )
+                        .preload()
+            }
+
+        }
+    }
+
+    fun pageScrolled(lastVisiblePosition: Int) {
+        if (lastVisiblePosition == images.size - 1) {
+            loadImageUrls((images.size / Constants.imagesPerPage) + 1)
         }
     }
 }

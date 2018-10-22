@@ -32,7 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 // Activity for showing images from Unsplash
 class GalleryGridActivity : AppCompatActivity(), ConnectivityListener {
 
-    private val viewModel by viewModel<GalleryViewModel>()
+    private val viewModel by viewModel<GalleryGridViewModel>()
 
     private val receiver = ConnectivityBroadcastReceiver(this)
 
@@ -46,11 +46,7 @@ class GalleryGridActivity : AppCompatActivity(), ConnectivityListener {
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .replace(
-                            R.id.container,
-                            GalleryGridFragment.newInstance(),
-                            GalleryGridFragment.tag
-                    )
+                    .replace(R.id.container, GalleryGridFragment.newInstance())
                     .commit()
         }
     }

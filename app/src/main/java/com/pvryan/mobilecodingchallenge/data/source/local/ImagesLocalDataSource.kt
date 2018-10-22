@@ -22,6 +22,7 @@ import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import okhttp3.Headers
 import retrofit2.Response
+import kotlin.math.min
 
 class ImagesLocalDataSource : ImagesDataSource {
 
@@ -36,10 +37,10 @@ class ImagesLocalDataSource : ImagesDataSource {
             imagesPerPage: Int
     ): Deferred<Response<List<Image>>> = GlobalScope.async {
 
-        /*val (firstIndex, lastIndex) = when {
+        val (firstIndex, lastIndex) = when {
 
-            page <= images.size / imagesPerPage ->
-                Pair((page * imagesPerPage) - imagesPerPage - 1, (page * imagesPerPage) - 1)
+            images.size >= page * imagesPerPage || page * imagesPerPage - images.size < imagesPerPage ->
+                Pair((page * imagesPerPage) - imagesPerPage, min((page * imagesPerPage) - 1, images.size - 1))
 
             else -> Pair(0, -1)
         }
@@ -53,7 +54,6 @@ class ImagesLocalDataSource : ImagesDataSource {
                 (if (requestedImages.isNotEmpty()) images.size else 0).toString()
         )
 
-        Response.success(requestedImages, Headers.of(mapOf(headerXTotal)))*/
-        Response.success(emptyList<Image>(), Headers.of(mapOf(Pair(Constants.Headers.xTotal, 0.toString()))))
+        Response.success(requestedImages, Headers.of(mapOf(headerXTotal)))
     }
 }

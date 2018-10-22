@@ -18,7 +18,7 @@ import com.pvryan.mobilecodingchallenge.Constants
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import com.pvryan.mobilecodingchallenge.data.source.local.ImagesLocalDataSource
 import com.pvryan.mobilecodingchallenge.data.source.remote.ImagesRemoteDataSource
-import kotlinx.coroutines.experimental.Dispatchers
+import com.pvryan.mobilecodingchallenge.runOnMainThread
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.launch
 import retrofit2.HttpException
@@ -48,21 +48,21 @@ class ImagesRepository {
                             ?.get(Constants.Headers.xTotal)
                             ?.toIntOrNull() ?: images.size
 
-                    GlobalScope.launch(Dispatchers.Main) { success(images, totalAvailable) }
+                    runOnMainThread { success(images, totalAvailable) }
                     return@launch
                 }
             }
 
             val remoteResponse = remote.loadImages(page, imagesPerPage).await()
 
-            GlobalScope.launch(Dispatchers.Main) {
+            runOnMainThread {
 
                 if (remoteResponse.isSuccessful) {
 
                     val images = remoteResponse.body() as? ArrayList<Image>
                             ?: run {
                                 failure(Throwable(Constants.Errors.unknownError))
-                                return@launch
+                                return@runOnMainThread
                             }
 
                     local.saveImages(images)

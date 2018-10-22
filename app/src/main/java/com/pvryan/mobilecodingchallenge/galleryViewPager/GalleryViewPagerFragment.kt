@@ -4,98 +4,136 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.databinding.ObservableList
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.pvryan.mobilecodingchallenge.Constants
+import com.pvryan.mobilecodingchallenge.Orientation
 import com.pvryan.mobilecodingchallenge.R
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import com.pvryan.mobilecodingchallenge.extensions.arguments
 import com.pvryan.mobilecodingchallenge.extensions.hide
+import com.pvryan.mobilecodingchallenge.extensions.hideSystemUi
 import com.pvryan.mobilecodingchallenge.extensions.show
+import com.pvryan.mobilecodingchallenge.extensions.showSystemUi
 import com.pvryan.mobilecodingchallenge.extensions.snackLong
-import com.pvryan.mobilecodingchallenge.galleryGrid.GalleryViewModel
+import com.pvryan.mobilecodingchallenge.runOnMainThread
 import com.transitionseverywhere.ChangeText
 import com.transitionseverywhere.TransitionManager
 import kotlinx.android.synthetic.main.fragment_gallery_view_pager.clTopBar
 import kotlinx.android.synthetic.main.fragment_gallery_view_pager.flBottomBar
-import kotlinx.android.synthetic.main.fragment_gallery_view_pager.flViewPager
+import kotlinx.android.synthetic.main.fragment_gallery_view_pager.flGalleryViewPager
 import kotlinx.android.synthetic.main.fragment_gallery_view_pager.ivCloseButton
-import kotlinx.android.synthetic.main.fragment_gallery_view_pager.pager
 import kotlinx.android.synthetic.main.fragment_gallery_view_pager.tvImageDescription
 import kotlinx.android.synthetic.main.fragment_gallery_view_pager.tvLikes
+import kotlinx.android.synthetic.main.fragment_gallery_view_pager.vpGallery
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
 class GalleryViewPagerFragment : Fragment() {
 
-    private val viewModel by sharedViewModel<GalleryViewModel>()
+    private val viewModel by sharedViewModel<GalleryViewPagerViewModel>()
 
-    private val imagesObserver by lazy {
+    private val imagesObserver = object : ObservableList.OnListChangedCallback<ObservableList<Image>>() {
 
-        object : ObservableList.OnListChangedCallback<ObservableList<Image>>() {
+        override fun onItemRangeRemoved(p0: ObservableList<Image>?, p1: Int, p2: Int) {
+            vpGallery.adapter?.notifyDataSetChanged()
+        }
 
-            override fun onItemRangeRemoved(p0: ObservableList<Image>?, p1: Int, p2: Int) {}
+        override fun onChanged(list: ObservableList<Image>) {
+            vpGallery.adapter?.notifyDataSetChanged()
+        }
 
-            override fun onChanged(list: ObservableList<Image>) {
-                pager.adapter?.notifyDataSetChanged()
-            }
+        override fun onItemRangeMoved(list: ObservableList<Image>, p1: Int, p2: Int, p3: Int) {
+            vpGallery.adapter?.notifyDataSetChanged()
+        }
 
-            override fun onItemRangeMoved(list: ObservableList<Image>, p1: Int, p2: Int, p3: Int) {}
+        override fun onItemRangeInserted(
+                list: ObservableList<Image>,
+                positionStart: Int,
+                itemCount: Int
+        ) {
+            vpGallery.adapter?.notifyDataSetChanged()
+        }
 
-            override fun onItemRangeInserted(list: ObservableList<Image>, positionStart: Int, itemCount: Int) {
-                pager.adapter?.notifyDataSetChanged()
-            }
-
-            override fun onItemRangeChanged(list: ObservableList<Image>, positionStart: Int, itemCount: Int) {
-                pager.adapter?.notifyDataSetChanged()
-            }
+        override fun onItemRangeChanged(
+                list: ObservableList<Image>,
+                positionStart: Int,
+                itemCount: Int
+        ) {
+            vpGallery.adapter?.notifyDataSetChanged()
         }
     }
 
-    private val networkAvailableObserver by lazy {
-        Observer<Boolean> { if (it == false) viewModel.snackbarMessage.value = Constants.Errors.noNetwork }
+    private val pageSelectedObserver = Observer<Int> { page ->
+
+        TransitionManager.beginDelayedTransition(
+                flBottomBar as? ViewGroup,
+                ChangeText().setChangeBehavior(ChangeText.CHANGE_BEHAVIOR_IN)
+        )
+
+        tvLikes.text = NumberFormat.getIntegerInstance(Locale.US).format(viewModel.images[page].likes)
+
+        tvImageDescription.text = viewModel.images[page].description
+                ?: getString(R.string.text_description_placeholder, page)
+
+        arguments { putInt(Constants.Keys.position, vpGallery.currentItem) }
     }
 
-    private val fullScreenObserver by lazy {
-        Observer<Boolean> {
-            TransitionManager.beginDelayedTransition(flViewPager as ViewGroup)
-            if (it == true) {
-                clTopBar.hide()
-                flBottomBar.hide()
-            } else {
+    private val fullScreenObserver = Observer<Boolean> {
+
+        TransitionManager.beginDelayedTransition(flGalleryViewPager as ViewGroup)
+
+        if (it == true) {
+            clTopBar.hide()
+            flBottomBar.hide()
+            runOnMainThread(400) { activity?.hideSystemUi() }
+        } else {
+            runOnMainThread(400) {
                 clTopBar.show()
                 flBottomBar.show()
             }
+            activity?.showSystemUi()
         }
     }
 
-    private val snackbarMessageObserver by lazy { Observer<Any> { flViewPager.snackLong(it) } }
+    private val snackbarMessageObserver = Observer<Any> { flGalleryViewPager.snackLong(it) }
 
-    private val onPageChangeListener by lazy {
+    private val orientationObserver = Observer<Orientation> {
 
-        object : ViewPager.OnPageChangeListener {
+        val navigationBarHeight = resources.getDimensionPixelSize(R.dimen.navigation_bar_height)
 
-            override fun onPageScrollStateChanged(state: Int) {}
+        val layoutParams = (flBottomBar.layoutParams as FrameLayout.LayoutParams)
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        when (it) {
 
-            override fun onPageSelected(position: Int) {
-
-                TransitionManager.beginDelayedTransition(
-                        flBottomBar as ViewGroup,
-                        ChangeText().setChangeBehavior(ChangeText.CHANGE_BEHAVIOR_IN)
-                )
-
-                tvLikes.text = NumberFormat.getIntegerInstance(Locale.US).format(viewModel.images[position].likes)
-
-                tvImageDescription.text = viewModel.images[position].description
-                        ?: getString(R.string.text_description_placeholder, position)
-
-                arguments { putInt(Constants.Keys.position, pager.currentItem) }
+            Orientation.Portrait,
+            Orientation.PortraitInverted -> {
+                layoutParams.setMargins(0, 0, 0, navigationBarHeight)
+                ivCloseButton.show()
             }
+
+            Orientation.Landscape -> {
+                layoutParams.setMargins(0, 0, navigationBarHeight, 0)
+                ivCloseButton.show()
+            }
+
+            Orientation.LandscapeInverted -> {
+                layoutParams.setMargins(navigationBarHeight, 0, 0, 0)
+                ivCloseButton.hide()
+            }
+        }
+
+        flBottomBar.layoutParams = layoutParams
+    }
+
+    private val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
+
+        override fun onPageSelected(position: Int) {
+            viewModel.pageSelected(position)
         }
     }
 
@@ -107,44 +145,65 @@ class GalleryViewPagerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupViewModel()
-        ivCloseButton.setOnClickListener { activity?.finish() }
+        setupViewPager(savedInstanceState)
+
+        ivCloseButton.setOnClickListener { activity?.onBackPressed() }
+    }
+
+    override fun onDestroyView() {
+        viewModel.disableOrientationEventListener()
+        super.onDestroyView()
     }
 
     override fun onResume() {
         super.onResume()
-        setupViewPager()
         viewModel.images.addOnListChangedCallback(imagesObserver)
     }
 
     override fun onPause() {
         viewModel.images.removeOnListChangedCallback(imagesObserver)
-        pager.removeOnPageChangeListener(onPageChangeListener)
+        vpGallery.removeOnPageChangeListener(onPageChangeListener)
         super.onPause()
     }
 
-    private fun setupViewPager() {
+    private fun setupViewPager(savedInstanceState: Bundle? = null) {
+
         // Initiate view pager
-        pager.apply {
-            adapter = GalleryViewPagerAdapter(viewModel.images)
+        vpGallery.apply {
+
+            adapter = GalleryViewPagerAdapter(
+                    viewModel.images,
+                    singleTapAction = { viewModel.fullScreen.value = !viewModel.fullScreen.value }
+            )
+
             addOnPageChangeListener(onPageChangeListener)
-            val item = arguments?.getInt(Constants.Keys.position) ?: Constants.defaultPosition
-            setCurrentItem(item, false)
+
+            val position: Int = savedInstanceState?.getInt(Constants.Keys.position)
+                    ?: arguments?.getInt(Constants.Keys.position)
+                    ?: viewModel.pageSelected.value
+                    ?: Constants.defaultPosition
+
+            setCurrentItem(position, false)
         }
     }
 
     private fun setupViewModel() {
         viewModel.apply {
-            loadImageUrls(Constants.defaultPage)
-            networkAvailable.observe(this@GalleryViewPagerFragment, networkAvailableObserver)
+            images.addOnListChangedCallback(imagesObserver)
+            pageSelected.observe(this@GalleryViewPagerFragment, pageSelectedObserver)
             fullScreen.observe(this@GalleryViewPagerFragment, fullScreenObserver)
             snackbarMessage.observe(this@GalleryViewPagerFragment, snackbarMessageObserver)
+            orientation.observe(this@GalleryViewPagerFragment, orientationObserver)
+            start()
         }
     }
 
     companion object {
-        fun newInstance(position: Int) = GalleryViewPagerFragment().arguments {
-            putInt(Constants.Keys.position, position)
-        }
+
+        fun newInstance(
+                position: Int
+        ) = GalleryViewPagerFragment().arguments { putInt(Constants.Keys.position, position) }
     }
 }

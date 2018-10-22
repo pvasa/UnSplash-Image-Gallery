@@ -2,13 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/flViewPager"
+    android:id="@+id/flGalleryViewPager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
+        android:id="@+id/vpGallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black" />
@@ -16,8 +16,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clTopBar"
         android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
-        android:background="@color/black_transparent_40_percent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:background="@color/black_transparent_40_percent"
+        android:padding="8dp">
 
         <ImageView
             android:id="@+id/ivCloseButton"
@@ -34,13 +36,17 @@
             android:id="@+id/tvImageDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:textAlignment="center"
             android:textColor="@color/primary_text"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@id/ivCloseButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ivCloseButton"
-            tools:text="Image Description" />
+            app:layout_constraintStart_toEndOf="@id/ivCloseButton"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Image Description some very very long description that cannot fit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -49,6 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/navigation_bar_height"
         android:background="@color/black_transparent_40_percent">
 
         <TextView
@@ -57,7 +64,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:drawableStart="@drawable/unsplash_heart_red_24px"
-            android:drawableLeft="@drawable/unsplash_heart_red_24px"
             android:drawablePadding="@dimen/fab_margin"
             android:maxEms="10"
             android:padding="@dimen/fab_margin"

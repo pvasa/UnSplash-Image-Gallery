@@ -31,13 +31,13 @@ import kotlinx.android.synthetic.main.item_image.view.ivImage
 // Adapter for recycler view showing images in grid layout
 class GalleryGridAdapter(
         private val images: ArrayList<Image>,
-        private val userActionListener: ImageItemUserActionListener
+        private val itemClickAction: (position: Int) -> Unit
 ) : RecyclerView.Adapter<GalleryGridAdapter.GalleryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_image, parent, false)
-        return GalleryViewHolder(itemView, userActionListener)
+        return GalleryViewHolder(itemView, itemClickAction)
     }
 
     override fun onBindViewHolder(holder: GalleryViewHolder, position: Int) {
@@ -51,7 +51,7 @@ class GalleryGridAdapter(
     // View holder of each image
     class GalleryViewHolder(
             itemView: View,
-            private val userActionListener: ImageItemUserActionListener
+            private val itemClickAction: (position: Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         fun bindImage(image: Image, position: Int) {
@@ -69,7 +69,7 @@ class GalleryGridAdapter(
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                     )
                     .into(itemView.ivImage)
-            itemView.setOnClickListener { userActionListener.onImageClick(position) }
+            itemView.setOnClickListener { itemClickAction(position) }
         }
     }
 }

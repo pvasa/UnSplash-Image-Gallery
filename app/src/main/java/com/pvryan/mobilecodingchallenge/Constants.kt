@@ -31,7 +31,8 @@ object Constants {
     }
 
     object RequestCodes {
-        const val viewPagerActivity = 0
+        const val galleryGridActivity = 0
+        const val galleryViewPagerActivity = 1
     }
 
     // Unsplash query params
@@ -50,6 +51,7 @@ object Constants {
     object Keys {
         const val expandedImage = "expandedImage"
         const val position = "position"
+        const val images = "images"
     }
 
     object Warnings {

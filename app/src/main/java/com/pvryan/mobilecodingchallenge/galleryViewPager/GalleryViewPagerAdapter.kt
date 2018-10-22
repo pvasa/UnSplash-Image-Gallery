@@ -26,26 +26,30 @@ import com.github.chrisbanes.photoview.PhotoView
 import com.pvryan.mobilecodingchallenge.data.models.Image
 import java.util.ArrayList
 
-@Suppress("MemberVisibilityCanBePrivate")
 // Adapter for view pager in expanded image layout
 class GalleryViewPagerAdapter(
-        private val images: ArrayList<Image>
+        private val images: ArrayList<Image>,
+        private val singleTapAction: () -> Unit
 ) : PagerAdapter() {
 
     // Return a new ImageView for image at current position
-    override fun instantiateItem(container: ViewGroup, position: Int): PhotoView = PhotoView(container.context)
-            .apply {
+    override fun instantiateItem(container: ViewGroup, position: Int): PhotoView =
+            PhotoView(container.context).apply {
+
                 layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 )
+
                 container.addView(this)
+
                 val circularProgressDrawable = CircularProgressDrawable(context).apply {
                     setStyle(CircularProgressDrawable.DEFAULT)
                     strokeWidth = 2f
                     centerRadius = 16f
                     start()
                 }
+
                 Glide.with(context)
                         .load(Uri.parse(images[position].urls.full))
                         .apply(RequestOptions()
@@ -53,6 +57,8 @@ class GalleryViewPagerAdapter(
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                         )
                         .into(this)
+
+                setOnViewTapListener { _, _, _ -> singleTapAction() }
             }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {

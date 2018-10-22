@@ -14,12 +14,37 @@
  */
 package com.pvryan.mobilecodingchallenge.galleryViewPager
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.pvryan.mobilecodingchallenge.Constants
+import com.pvryan.mobilecodingchallenge.Orientation
 import com.pvryan.mobilecodingchallenge.R
+import com.pvryan.mobilecodingchallenge.extensions.arguments
+import com.pvryan.mobilecodingchallenge.runOnMainThread
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GalleryViewPagerActivity : AppCompatActivity() {
+
+    private val viewModel by viewModel<GalleryViewPagerViewModel>()
+
+    private val orientationObserver = Observer<Orientation> {
+
+        requestedOrientation = when (it) {
+            Orientation.Portrait -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            Orientation.PortraitInverted -> ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
+            Orientation.Landscape -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            Orientation.LandscapeInverted -> ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+            Orientation.Unknown -> return@Observer
+        }
+    }
+
+    private val networkAvailableObserver = Observer<Boolean> {
+        if (it == false) viewModel.snackbarMessage.value = Constants.Errors.noNetwork
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,5 +59,29 @@ class GalleryViewPagerActivity : AppCompatActivity() {
                 ?.beginTransaction()
                 ?.replace(R.id.container, GalleryViewPagerFragment.newInstance(position))
                 ?.commit()
+
+        setupViewModel()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) runOnMainThread(300) { viewModel.goFullScreen() }
+    }
+
+    override fun onBackPressed() {
+        setResult(
+                Activity.RESULT_OK,
+                Intent().arguments {
+                    putInt(Constants.Keys.position, viewModel.pageSelected.value)
+                }
+        )
+        finish()
+    }
+
+    private fun setupViewModel() {
+        with(viewModel) {
+            orientation.observe(this@GalleryViewPagerActivity, orientationObserver)
+            networkAvailable.observe(this@GalleryViewPagerActivity, networkAvailableObserver)
+        }
     }
 }

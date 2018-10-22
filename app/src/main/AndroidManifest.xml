@@ -29,9 +29,10 @@
 
         <activity
             android:name=".galleryViewPager.GalleryViewPagerActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="screenSize|orientation"
             android:parentActivityName=".galleryGrid.GalleryGridActivity"
-            android:theme="@style/AppTheme.FullScreen">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Translucent.System.Ui">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".galleryGrid.GalleryGridActivity" />

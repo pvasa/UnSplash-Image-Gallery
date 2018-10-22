@@ -5,7 +5,7 @@ ext {
     ver_code = 101
     ver_name = '1.0.1'
     compile_sdk = 28
-    min_sdk = 16
+    min_sdk = 19
     target_sdk = 28
     lifecycle_extensions = '2.0.0'
 
